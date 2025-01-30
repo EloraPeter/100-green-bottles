@@ -1,0 +1,56 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background: url("wall.jpeg") no-repeat bottom/cover;
+    
+}
+
+#lyrics {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: #f9f9f9;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.wall {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1200px;
+    margin: auto;
+    position: relative;
+    padding: 20px;
+}
+
+.bottle {
+    width: 100px;
+    height: 80px;
+    background: url("bottle-removebg-preview.png") no-repeat center/contain;
+    margin: 0;
+    transition: transform 1s ease-in-out, opacity 1s;
+}
+
+.falling {
+    transform: translateY(100px) rotate(45deg);
+    opacity: 0;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px;
+    border: none;
+    background: #28a745;
+    color: white;
+    border-radius: 5px;
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
