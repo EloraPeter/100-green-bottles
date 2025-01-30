@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>100 Green Bottles Game</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <h1>100 Green Bottles Game</h1>
-    <button onclick="startGame()">Start Game</button>
-    <div id="lyrics"></div>
-    <div class="wall" id="bottleWall"></div>
-    <button id="takeOne" onclick="takeOneDown()" disabled>Take One Down</button>
 
-   <script src="script.js"></script>
+<body>
+    <div class="main">
+        <h1>100 Green Bottles Game</h1>
+        <button onclick="startGame()">Start Game</button>
+        <div id="lyrics">
+            
+        </div>
+        <div class="wall" id="bottleWall"></div>
+        <button id="takeOne" onclick="takeOneDown()" disabled>Take One Down</button>
+    </div>
+
+    <script src="script.js"></script>
 </body>
+
 </html>
