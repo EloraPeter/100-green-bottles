@@ -1,0 +1,126 @@
+body {
+    font-family: 'Comic Sans MS', cursive; /* Fun, child-friendly font */
+    text-align: center;
+    padding: 20px;
+    background-image: url("wall.jpeg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+.main {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: rgba(255, 255, 255, 0.8); /* Light overlay for readability */
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+    font-size: 60px;
+    color: #ff6f61; /* Bright, playful color */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-10px); }
+    60% { transform: translateY(-5px); }
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 20px;
+    cursor: pointer;
+    margin: 10px;
+    border: none;
+    background: #ff6f61;
+    color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+    background: #ff8c7f;
+    transform: scale(1.1);
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: scale(1);
+}
+
+.lyrics-box {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 15px;
+    font-size: 22px;
+    color: #333;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+    max-height: 200px;
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.wall {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    position: relative;
+}
+
+.bottle {
+    width: 60px;
+    height: 120px;
+    background: url("bottle-removebg-preview.png") no-repeat center/contain;
+    margin: 10px 5px;
+    transition: transform 1s ease-in-out, opacity 1s;
+    cursor: pointer; /* Make bottles clickable for fun interaction */
+}
+
+.bottle:hover {
+    transform: scale(1.1);
+}
+
+.falling {
+    transform: translateY(200px) rotate(45deg) scale(0.8);
+    opacity: 0;
+    animation: fallAndBreak 1s ease-out;
+}
+
+@keyframes fallAndBreak {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
+    70% { transform: translateY(150px) rotate(30deg) scale(0.9); opacity: 0.7; }
+    100% { transform: translateY(200px) rotate(45deg) scale(0.8); opacity: 0; }
+}
+
+.score {
+    font-size: 24px;
+    color: #ff6f61;
+    margin-top: 20px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
