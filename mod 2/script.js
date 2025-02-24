@@ -18,6 +18,7 @@ let levelButtons = {
     3: document.getElementById("level3Btn"),
     4: document.getElementById("level4Btn")
 };
+let nextLevelButton = document.getElementById("nextLevel");
 
 function startLevel(level) {
     if (!completedLevels.includes(level)) {
@@ -32,6 +33,7 @@ function startLevel(level) {
     gameArea.style.display = "none";
     bottleWall.style.display = "block";
     lyricsContainer.innerHTML = "";
+    nextLevelButton.style.display = "none"; // Hide next level button when starting a level
     updateScore();
     updateProgress();
     switch (level) {
@@ -144,8 +146,7 @@ function takeOneDown() {
             celebrateEnd();
             lyricsContainer.innerHTML += `<p>Yay! No more green bottles standing on the wall! You’re a superstar! 🌟</p>`;
             speakLyrics("Yay! No more green bottles standing on the wall! You’re a superstar!");
-            completedLevels.push(2); // Unlock Level 2
-            checkLevelProgress();
+            showNextLevelButton();
         }
     }
 }
@@ -205,20 +206,23 @@ function drop(e) {
 function checkPyramidComplete() {
     const bottles = document.querySelectorAll(".stack-bottle");
     const positions = [
-        { x: 200, y: 350, count: 5 }, // Base (5 bottles)
-        { x: 225, y: 300, count: 4 }, // Second row
+        { x: 150, y: 350, count: 5 }, // Base (5 bottles, spread across 300px)
+        { x: 200, y: 300, count: 4 }, // Second row
         { x: 250, y: 250, count: 3 }, // Third row
-        { x: 275, y: 200, count: 2 }, // Fourth row
-        { x: 300, y: 150, count: 1 }  // Top
+        { x: 300, y: 200, count: 2 }, // Fourth row
+        { x: 350, y: 150, count: 1 }  // Top
     ];
 
     let correct = true;
     let placed = 0;
+    let rowCounts = Array(5).fill(0); // Track bottles per row
     bottles.forEach(bottle => {
         let found = false;
-        for (let pos of positions) {
+        for (let i = 0; i < positions.length; i++) {
+            const pos = positions[i];
             if (Math.abs(parseInt(bottle.style.left) - pos.x) < 50 && Math.abs(parseInt(bottle.style.top) - pos.y) < 50) {
                 found = true;
+                rowCounts[i]++;
                 placed++;
                 break;
             }
@@ -226,13 +230,17 @@ function checkPyramidComplete() {
         if (!found) correct = false;
     });
 
+    // Check if each row has the correct number of bottles
+    for (let i = 0; i < positions.length; i++) {
+        if (rowCounts[i] !== positions[i].count) correct = false;
+    }
+
     if (correct && placed === 15) { // All 15 bottles placed correctly in pyramid
         stars += 30;
         gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
         speakLyrics("Yay! You built a perfect pyramid!");
         celebrateEnd();
-        completedLevels.push(3); // Unlock Level 3
-        checkLevelProgress();
+        showNextLevelButton();
     }
 }
 
@@ -287,8 +295,7 @@ function startBottleCatch() {
             gameArea.innerHTML += `<p>Yay! You caught enough bottles! 🎉</p>`;
             speakLyrics("Yay! You caught enough bottles!");
             celebrateEnd();
-            completedLevels.push(4); // Unlock Level 4
-            checkLevelProgress();
+            showNextLevelButton();
         }
     }
 
@@ -311,6 +318,9 @@ function startBottlePuzzle() {
     bottleWall.style.display = "none";
     gameArea.style.display = "block";
     gameArea.innerHTML = `<h2>Solve the Bottle Puzzle!</h2><div class="bottle-puzzle" id="puzzleArea"></div>`;
+    numberOfBottles = 0; // Reset for puzzle
+    stars = 0;
+    updateScore();
     createPuzzle();
 }
 
@@ -387,7 +397,7 @@ function checkPuzzleComplete() {
         gameArea.innerHTML += `<p>Yay! Puzzle solved! 🎉</p>`;
         speakLyrics("Yay! Puzzle solved!");
         celebrateEnd();
-        checkLevelProgress();
+        showNextLevelButton();
     }
 }
 
@@ -436,16 +446,31 @@ function launchConfetti() {
     });
 }
 
+function showNextLevelButton() {
+    nextLevelButton.style.display = "block";
+    takeOneButton.style.display = "none"; // Hide the "Knock One Down" button
+    updateBuddy(`Great job! Click "Next Level" to continue!`);
+}
+
+function startNextLevel() {
+    if (currentLevel < 4) {
+        currentLevel++;
+        completedLevels.push(currentLevel);
+        startLevel(currentLevel);
+        nextLevelButton.style.display = "none";
+        takeOneButton.style.display = "block"; // Show the "Knock One Down" button for Level 1, adjust for others
+        updateLevelLocks();
+        updateBuddy(`Level ${currentLevel} unlocked! Let’s play!`);
+    } else {
+        updateBuddy(`You’re a Bottle Master! 🎉 Play again for more fun!`);
+        nextLevelButton.style.display = "none";
+        takeOneButton.style.display = "none";
+    }
+}
+
 function checkLevelProgress() {
     if (stars >= 100 * currentLevel) { // Example: 100 stars per level to progress
-        currentLevel++;
-        if (currentLevel <= 4) {
-            completedLevels.push(currentLevel);
-            updateBuddy(`Wow! You unlocked Level ${currentLevel}!`);
-            setTimeout(() => startLevel(currentLevel), 2000);
-        } else {
-            updateBuddy(`You’re a Bottle Master! 🎉 Play again for more fun!`);
-        }
+        showNextLevelButton();
     }
     updateLevelLocks();
 }
@@ -458,6 +483,7 @@ function updateLevelLocks() {
         } else {
             levelButtons[i].classList.remove("locked");
             levelButtons[i].disabled = false;
+            levelButtons[i].onclick = () => startLevel(i);
         }
     }
 }
