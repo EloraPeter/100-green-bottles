@@ -1,6 +1,7 @@
 let currentLevel = 1;
-let numberOfBottles = 100;
+let numberOfBottles = 0; // Reset for each level as needed
 let stars = 0;
+let completedLevels = [1]; // Track completed levels (start with Level 1 complete)
 let lyricsContainer = document.getElementById("lyrics");
 let takeOneButton = document.getElementById("takeOne");
 let bottleWall = document.getElementById("bottleWall");
@@ -11,11 +12,21 @@ let buddyText = document.getElementById("buddyText");
 let gameArea = document.getElementById("gameArea");
 let progressBar = document.getElementById("progressBar");
 let currentStarsDisplay = document.getElementById("stars");
+let levelButtons = {
+    1: document.getElementById("level1Btn"),
+    2: document.getElementById("level2Btn"),
+    3: document.getElementById("level3Btn"),
+    4: document.getElementById("level4Btn")
+};
 
 function startLevel(level) {
+    if (!completedLevels.includes(level)) {
+        updateBuddy("Oops! You need to complete the previous level first! 🔒");
+        return;
+    }
     currentLevel = level;
-    stars = 0; // Reset stars for new level
     numberOfBottles = 100; // Reset for Level 1, adjust for others
+    stars = 0; // Reset stars for new level
     document.getElementById("currentLevel").textContent = currentLevel;
     takeOneButton.disabled = false;
     gameArea.style.display = "none";
@@ -41,7 +52,7 @@ function startLevel(level) {
 }
 
 function updateProgress() {
-    const maxStars = 100 * currentLevel; // Example: 100 stars per level to reach next
+    const maxStars = 100 * currentLevel; // Example: 100 stars per level to progress
     const progress = (stars / maxStars) * 100;
     progressBar.value = progress;
 }
@@ -55,6 +66,25 @@ function updateBuddy(message) {
     buddyText.textContent = message;
     buddyText.style.animation = "blink 2s infinite";
     setTimeout(() => buddyText.style.animation = "none", 2000);
+}
+
+// Level View with Padlocks
+function showLevels() {
+    document.getElementById("levelSelector").style.display = "block";
+    for (let i = 1; i <= 4; i++) {
+        levelButtons[i].classList.remove("locked");
+        if (!completedLevels.includes(i)) {
+            levelButtons[i].classList.add("locked");
+            levelButtons[i].disabled = true;
+        } else {
+            levelButtons[i].disabled = false;
+            levelButtons[i].onclick = () => startLevel(i);
+        }
+    }
+}
+
+function hideLevels() {
+    document.getElementById("levelSelector").style.display = "none";
 }
 
 // Level 1: Bottle Knock (Existing Game)
@@ -92,7 +122,7 @@ function takeOneDown() {
         let bottleWord = numberOfBottles === 1 ? "bottle" : "bottles";
         let text = `${numberOfBottles} green ${bottleWord} standing on the wall. ${numberOfBottles} green ${bottleWord} standing on the wall. If one green bottle should accidentally fall down...`;
         numberOfBottles--;
-        stars += 5; // Earn 5 stars per bottle
+        stars += 5;
 
         let bottleToFall = document.getElementById(`bottle${numberOfBottles}`);
         if (bottleToFall) {
@@ -114,55 +144,106 @@ function takeOneDown() {
             celebrateEnd();
             lyricsContainer.innerHTML += `<p>Yay! No more green bottles standing on the wall! You’re a superstar! 🌟</p>`;
             speakLyrics("Yay! No more green bottles standing on the wall! You’re a superstar!");
+            completedLevels.push(2); // Unlock Level 2
             checkLevelProgress();
         }
     }
 }
 
-// Level 2: Bottle Stack Challenge
+// Level 2: Bottle Stack (Pyramid Drag-and-Drop, 5 Base to 1 Top)
 function startBottleStack() {
     bottleWall.style.display = "none";
     gameArea.style.display = "block";
-    gameArea.innerHTML = `<h2>Stack Bottles to 10!</h2><div class="bottle-stack" id="stackArea"></div><button onclick="stackBottle()">Add Bottle</button>`;
+    gameArea.innerHTML = `<h2>Build a Bottle Pyramid (5 at Base, 1 at Top)!</h2><div class="bottle-stack" id="stackArea"></div>`;
     numberOfBottles = 0; // Reset for stacking
     stars = 0;
     updateScore();
+    createStackBottles();
 }
 
-function stackBottle() {
-    if (numberOfBottles < 10) {
-        let stackArea = document.getElementById("stackArea");
+function createStackBottles() {
+    const stackArea = document.getElementById("stackArea");
+    stackArea.innerHTML = "";
+    for (let i = 0; i < 15; i++) { // 15 bottles to drag (more than needed for pyramid)
         let bottle = document.createElement("div");
         bottle.classList.add("stack-bottle");
-        bottle.style.transform = `translateX(${Math.random() * 20 - 10}px)`;
+        bottle.draggable = true;
+        bottle.addEventListener("dragstart", dragStart);
+        bottle.addEventListener("dragover", dragOver);
+        bottle.addEventListener("drop", drop);
         stackArea.appendChild(bottle);
-        numberOfBottles++;
-        stars += 2;
-        updateScore();
-        updateProgress();
-        updateBuddy(`Great stack! ${numberOfBottles} bottles high!`);
-        if (numberOfBottles === 10) {
-            gameArea.innerHTML += `<p>Yay! You stacked 10 bottles! 🎉</p>`;
-            speakLyrics("Yay! You stacked 10 bottles!");
-            celebrateEnd();
-            checkLevelProgress();
-        }
-    } else {
-        updateBuddy("Oops! You toppled the stack! Try again!");
-        gameArea.innerHTML = `<h2>Stack Bottles to 10!</h2><div class="bottle-stack" id="stackArea"></div><button onclick="stackBottle()">Add Bottle</button>`;
-        numberOfBottles = 0;
-        stars -= 5; // Penalty for failing
-        if (stars < 0) stars = 0;
-        updateScore();
-        updateProgress();
+    }
+    stackArea.addEventListener("dragover", dragOver);
+    stackArea.addEventListener("drop", drop);
+}
+
+let draggedBottle = null;
+
+function dragStart(e) {
+    draggedBottle = e.target;
+    e.dataTransfer.setData("text/plain", e.target.id);
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function drop(e) {
+    e.preventDefault();
+    if (draggedBottle) {
+        const id = e.dataTransfer.getData("text/plain");
+        const bottle = document.getElementById(id);
+        const rect = e.target.getBoundingClientRect();
+        const x = e.clientX - rect.left - 25; // Center bottle
+        const y = e.clientY - rect.top - 50;
+        bottle.style.left = `${x}px`;
+        bottle.style.top = `${y}px`;
+        checkPyramidComplete();
     }
 }
 
-// Level 3: Bottle Catch Game
+function checkPyramidComplete() {
+    const bottles = document.querySelectorAll(".stack-bottle");
+    const positions = [
+        { x: 200, y: 350, count: 5 }, // Base (5 bottles)
+        { x: 225, y: 300, count: 4 }, // Second row
+        { x: 250, y: 250, count: 3 }, // Third row
+        { x: 275, y: 200, count: 2 }, // Fourth row
+        { x: 300, y: 150, count: 1 }  // Top
+    ];
+
+    let correct = true;
+    let placed = 0;
+    bottles.forEach(bottle => {
+        let found = false;
+        for (let pos of positions) {
+            if (Math.abs(parseInt(bottle.style.left) - pos.x) < 50 && Math.abs(parseInt(bottle.style.top) - pos.y) < 50) {
+                found = true;
+                placed++;
+                break;
+            }
+        }
+        if (!found) correct = false;
+    });
+
+    if (correct && placed === 15) { // All 15 bottles placed correctly in pyramid
+        stars += 30;
+        gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
+        speakLyrics("Yay! You built a perfect pyramid!");
+        celebrateEnd();
+        completedLevels.push(3); // Unlock Level 3
+        checkLevelProgress();
+    }
+}
+
+// Level 3: Bottle Catch (Add Bottle on Catch, No Change on Miss)
 function startBottleCatch() {
     bottleWall.style.display = "none";
     gameArea.style.display = "block";
     gameArea.innerHTML = `<h2>Catch the Falling Bottles!</h2><div class="bottle-catch" id="catchArea"><div class="basket" id="basket"></div></div>`;
+    numberOfBottles = 0; // Track caught bottles
+    stars = 0;
+    updateScore();
     let catchArea = document.getElementById("catchArea");
     let basket = document.getElementById("basket");
     let basketX = 0;
@@ -190,25 +271,23 @@ function startBottleCatch() {
                 if (top > catchArea.offsetHeight - 50) {
                     clearInterval(fall);
                     bottle.remove();
-                    stars -= 2; // Penalty for missing
-                    if (stars < 0) stars = 0;
-                    updateScore();
-                    updateProgress();
                     updateBuddy("Oops! Missed a bottle!");
                 }
                 if (isColliding(bottle, basket)) {
                     clearInterval(fall);
                     bottle.remove();
+                    numberOfBottles++; // Add a bottle on catch
                     stars += 5;
                     updateScore();
                     updateProgress();
-                    updateBuddy("Great catch! Keep it up!");
+                    updateBuddy(`Great catch! You have ${numberOfBottles} bottles!`);
                 }
             }, 30);
         } else {
             gameArea.innerHTML += `<p>Yay! You caught enough bottles! 🎉</p>`;
             speakLyrics("Yay! You caught enough bottles!");
             celebrateEnd();
+            completedLevels.push(4); // Unlock Level 4
             checkLevelProgress();
         }
     }
@@ -227,7 +306,7 @@ function isColliding(bottle, basket) {
     );
 }
 
-// Level 4: Bottle Puzzle
+// Level 4: Bottle Puzzle (Fixed)
 function startBottlePuzzle() {
     bottleWall.style.display = "none";
     gameArea.style.display = "block";
@@ -236,58 +315,75 @@ function startBottlePuzzle() {
 }
 
 function createPuzzle() {
-    const puzzlePieces = 4; // Simple 2x2 puzzle
     const puzzleArea = document.getElementById("puzzleArea");
-    for (let i = 0; i < puzzlePieces; i++) {
+    const pieces = [
+        { x: 50, y: 50, id: "piece1" },
+        { x: 150, y: 50, id: "piece2" },
+        { x: 50, y: 150, id: "piece3" },
+        { x: 150, y: 150, id: "piece4" }
+    ];
+    puzzleArea.innerHTML = "";
+    pieces.forEach((pos, index) => {
         let piece = document.createElement("div");
         piece.classList.add("puzzle-piece");
+        piece.id = pos.id;
         piece.style.background = `url('/bottle-removebg-preview.png') no-repeat center/contain`;
-        piece.style.width = "100px";
-        piece.style.height = "100px";
-        piece.style.position = "absolute";
         piece.style.left = `${Math.random() * 300}px`;
         piece.style.top = `${Math.random() * 200}px`;
         piece.draggable = true;
-        piece.addEventListener("dragstart", dragStart);
-        piece.addEventListener("dragover", dragOver);
-        piece.addEventListener("drop", drop);
+        piece.addEventListener("dragstart", dragStartPuzzle);
+        piece.addEventListener("dragover", dragOverPuzzle);
+        piece.addEventListener("drop", dropPuzzle);
         puzzleArea.appendChild(piece);
-    }
-    puzzleArea.addEventListener("dragover", dragOver);
-    puzzleArea.addEventListener("drop", drop);
+    });
+    puzzleArea.addEventListener("dragover", dragOverPuzzle);
+    puzzleArea.addEventListener("drop", dropPuzzle);
 }
 
 let draggedPiece = null;
 
-function dragStart(e) {
+function dragStartPuzzle(e) {
     draggedPiece = e.target;
+    e.dataTransfer.setData("text/plain", e.target.id);
 }
 
-function dragOver(e) {
+function dragOverPuzzle(e) {
     e.preventDefault();
 }
 
-function drop(e) {
+function dropPuzzle(e) {
     e.preventDefault();
-    if (draggedPiece && e.target.classList.contains("puzzle-piece")) {
+    if (draggedPiece) {
+        const id = e.dataTransfer.getData("text/plain");
+        const piece = document.getElementById(id);
         const rect = e.target.getBoundingClientRect();
-        draggedPiece.style.left = `${e.clientX - rect.left}px`;
-        draggedPiece.style.top = `${e.clientY - rect.top}px`;
+        const x = e.clientX - rect.left - 50; // Center piece
+        const y = e.clientY - rect.top - 50;
+        piece.style.left = `${x}px`;
+        piece.style.top = `${y}px`;
+        checkPuzzleComplete();
     }
-    checkPuzzleComplete();
 }
 
 function checkPuzzleComplete() {
     const pieces = document.querySelectorAll(".puzzle-piece");
+    const targetPositions = [
+        { x: 50, y: 50, id: "piece1" },
+        { x: 150, y: 50, id: "piece2" },
+        { x: 50, y: 150, id: "piece3" },
+        { x: 150, y: 150, id: "piece4" }
+    ];
     let complete = true;
     pieces.forEach(piece => {
-        const rect = piece.getBoundingClientRect();
-        if (rect.left < 100 || rect.left > 300 || rect.top < 100 || rect.top > 300) {
+        const pos = targetPositions.find(p => p.id === piece.id);
+        const currentX = parseInt(piece.style.left);
+        const currentY = parseInt(piece.style.top);
+        if (Math.abs(currentX - pos.x) > 20 || Math.abs(currentY - pos.y) > 20) {
             complete = false;
         }
     });
     if (complete) {
-        stars += 20;
+        stars += 40;
         gameArea.innerHTML += `<p>Yay! Puzzle solved! 🎉</p>`;
         speakLyrics("Yay! Puzzle solved!");
         celebrateEnd();
@@ -344,10 +440,24 @@ function checkLevelProgress() {
     if (stars >= 100 * currentLevel) { // Example: 100 stars per level to progress
         currentLevel++;
         if (currentLevel <= 4) {
+            completedLevels.push(currentLevel);
             updateBuddy(`Wow! You unlocked Level ${currentLevel}!`);
             setTimeout(() => startLevel(currentLevel), 2000);
         } else {
             updateBuddy(`You’re a Bottle Master! 🎉 Play again for more fun!`);
+        }
+    }
+    updateLevelLocks();
+}
+
+function updateLevelLocks() {
+    for (let i = 1; i <= 4; i++) {
+        if (!completedLevels.includes(i)) {
+            levelButtons[i].classList.add("locked");
+            levelButtons[i].disabled = true;
+        } else {
+            levelButtons[i].classList.remove("locked");
+            levelButtons[i].disabled = false;
         }
     }
 }
@@ -355,4 +465,5 @@ function checkLevelProgress() {
 document.addEventListener("DOMContentLoaded", () => {
     startLevel(1);
     updateBuddy("Hi! Let’s start our bottle adventure!");
+    updateLevelLocks();
 });
