@@ -16,12 +16,14 @@
             <img src="/bottle-buddy.png" alt="Bottle Buddy" class="buddy-img">
             <p id="buddyText">Hi! Let’s start our bottle adventure!</p>
         </div>
-        <div id="levelSelector">
-            <h2>Choose Your Level:</h2>
-            <button onclick="startLevel(1)">Level 1: Knock Bottles</button>
-            <button onclick="startLevel(2)">Level 2: Stack Bottles</button>
-            <button onclick="startLevel(3)">Level 3: Catch Bottles</button>
-            <button onclick="startLevel(4)">Level 4: Bottle Puzzle</button>
+        <button id="viewLevels" onclick="showLevels()">View Levels</button>
+        <div id="levelSelector" style="display: none;">
+            <h2>All Levels:</h2>
+            <button id="level1Btn">Level 1: Knock Bottles</button>
+            <button id="level2Btn">Level 2: Stack Bottles</button>
+            <button id="level3Btn">Level 3: Catch Bottles</button>
+            <button id="level4Btn">Level 4: Bottle Puzzle</button>
+            <button onclick="hideLevels()">Close</button>
         </div>
         <div id="progress">
             <p>Progress: Level <span id="currentLevel">1</span> | Stars: <span id="stars">0</span></p>
@@ -29,7 +31,7 @@
         </div>
         <div id="lyrics" class="lyrics-box"></div>
         <div class="wall" id="bottleWall"></div>
-        <div class="game-area" id="gameArea"></div> <!-- For other mini-games -->
+        <div class="game-area" id="gameArea"></div>
         <button id="takeOne" onclick="takeOneDown()" disabled>Knock One Down!</button>
         <div id="score" class="score">Bottles Left: 100 | Stars: 0</div>
         <div id="rewards" class="rewards">Collect Stars for Fun Prizes!</div>
