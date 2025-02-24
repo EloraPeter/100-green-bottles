@@ -2,7 +2,7 @@ body {
     font-family: 'Comic Sans MS', cursive; /* Fun, child-friendly font */
     text-align: center;
     padding: 20px;
-    background-image: url("wall.jpeg");
+    background-image: url("/wall.jpeg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
