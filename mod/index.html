@@ -3,20 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>100 Green Bottles Adventure</title>
+    <title>100 Green Bottles Magic Adventure</title>
     <link rel="stylesheet" href="style.css">
-    <audio id="bottleBreak" src="/bottle-break.mp3" preload="auto"></audio> <!-- Add a sound effect file -->
+    <link href="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" rel="stylesheet">
+    <audio id="bottleBreak" src="/bottle-break.mp3" preload="auto"></audio>
+    <audio id="cheer" src="/cheer-sound.mp3" preload="auto"></audio> <!-- Add a cheer sound -->
 </head>
 <body>
     <div class="main">
-        <h1>100 Green Bottles Adventure!</h1>
-        <button id="startGame" onclick="startGame()">Start the Fun!</button>
+        <h1>100 Green Bottles Magic Adventure!</h1>
+        <div class="character" id="bottleBuddy">
+            <img src="/bottle-buddy.png" alt="Bottle Buddy" class="buddy-img">
+            <p id="buddyText">Hi! Let’s knock down some bottles together!</p>
+        </div>
+        <button id="startGame" onclick="startGame()">Start the Magic!</button>
         <div id="lyrics" class="lyrics-box">
-            <p>Ready for some bottle fun? Click "Start the Fun!"</p>
+            <p>Ready for a magical bottle adventure? Click "Start the Magic!"</p>
         </div>
         <div class="wall" id="bottleWall"></div>
         <button id="takeOne" onclick="takeOneDown()" disabled>Knock One Down!</button>
-        <div id="score" class="score">Bottles Left: 100</div>
+        <div id="score" class="score">Bottles Left: 100 | Stars: 0</div>
+        <div id="rewards" class="rewards">Collect Stars for Fun Prizes!</div>
     </div>
 
     <script src="script.js"></script>
