@@ -40,12 +40,12 @@ h1 {
 }
 
 .character {
-    margin: 20px 0;
+    margin: 10px 0;
     max-width: 200px;
 }
 
 .buddy-img {
-    width: 150px;
+    width: 100px;
     height: auto;
     animation: wiggle 3s infinite;
     border-radius: 50%;
@@ -58,7 +58,7 @@ h1 {
 }
 
 #buddyText {
-    font-size: 18px;
+    font-size: 14px;
     color: #ff4d4d;
     margin-top: 10px;
     animation: blink 2s infinite;
