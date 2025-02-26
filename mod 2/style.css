@@ -86,6 +86,10 @@ button:disabled {
     transform: scale(1);
 }
 
+.hidden {
+    display: none;
+}
+
 .lyrics-box {
     max-width: 900px;
     margin: 20px auto;
@@ -106,10 +110,11 @@ button:disabled {
 }
 
 .wall {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(10, 70px); /* 10 columns for 10x10 grid */
+    grid-gap: 10px;
     justify-content: center;
-    max-width: 1200px;
+    max-width: 800px;
     margin: 20px auto;
     padding: 30px;
     position: relative;
@@ -121,10 +126,9 @@ button:disabled {
     width: 70px;
     height: 140px;
     background: url("/bottle-removebg-preview.png") no-repeat center/contain;
-    margin: 15px 10px;
-    /* transition: transform 1s ease-in-out, opacity 1s; */
     cursor: pointer;
     position: relative;
+    transition: transform 1s ease-in-out, opacity 1s;
 }
 
 .bottle:hover {
@@ -175,10 +179,6 @@ button:disabled {
     50% { background: #fff3cd; }
     100% { background: #ffebee; }
 }
-
-/* Existing CSS remains the same, adding these new styles */
-
-/* Existing CSS remains the same, adding/updating these styles */
 
 #levelSelector {
     margin: 20px auto;
@@ -234,7 +234,7 @@ button:disabled {
     display: none;
 }
 
-/* .bottle-stack {
+.bottle-stack {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -252,7 +252,7 @@ button:disabled {
     position: absolute;
     transition: transform 0.3s, top 0.3s, left 0.3s;
     cursor: move;
-} */
+}
 
 .bottle-catch {
     position: relative;
@@ -262,13 +262,13 @@ button:disabled {
     border-radius: 15px;
 }
 
-/* .catch-bottle {
+.catch-bottle {
     width: 50px;
     height: 100px;
     background: url("/bottle-removebg-preview.png") no-repeat center/contain;
     position: absolute;
     transition: top 2s linear;
-} */
+}
 
 .basket {
     width: 100px;
@@ -302,8 +302,6 @@ button:disabled {
     border: 2px solid #fff;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
-
-/* Existing CSS remains the same, adding/updating these styles */
 
 #nextLevel {
     padding: 18px 35px;

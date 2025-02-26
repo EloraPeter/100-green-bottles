@@ -1,16 +1,20 @@
+// Initialize variables
 let currentLevel = 1;
 let numberOfBottles = 0; // Reset for each level as needed
 let stars = 0;
 let completedLevels = [1]; // Track completed levels (start with Level 1 complete)
+let bottleBreakSound = document.getElementById("bottleBreak");
+let cheerSound = document.getElementById("cheer");
+
+// DOM elements
 let lyricsContainer = document.getElementById("lyrics");
 let takeOneButton = document.getElementById("takeOne");
 let bottleWall = document.getElementById("bottleWall");
 let scoreDisplay = document.getElementById("score");
-let bottleBreakSound = document.getElementById("bottleBreak");
-let cheerSound = document.getElementById("cheer");
 let buddyText = document.getElementById("buddyText");
 let gameArea = document.getElementById("gameArea");
 let progressBar = document.getElementById("progressBar");
+let currentLevelDisplay = document.getElementById("currentLevel");
 let currentStarsDisplay = document.getElementById("stars");
 let levelButtons = {
     1: document.getElementById("level1Btn"),
@@ -19,6 +23,12 @@ let levelButtons = {
     4: document.getElementById("level4Btn")
 };
 let nextLevelButton = document.getElementById("nextLevel");
+let viewLevelsButton = document.getElementById("viewLevels");
+let levelSelector = document.getElementById("levelSelector");
+
+// Event Listeners
+viewLevelsButton.addEventListener("click", showLevels);
+document.querySelector("#levelSelector button:last-child").addEventListener("click", hideLevels);
 
 function startLevel(level) {
     if (!completedLevels.includes(level)) {
@@ -28,12 +38,12 @@ function startLevel(level) {
     currentLevel = level;
     numberOfBottles = 100; // Reset for Level 1, adjust for others
     stars = 0; // Reset stars for new level
-    document.getElementById("currentLevel").textContent = currentLevel;
+    currentLevelDisplay.textContent = currentLevel;
     takeOneButton.disabled = false;
-    gameArea.style.display = "none";
-    // bottleWall.style.display = "block";
+    gameArea.classList.add("hidden");
+    bottleWall.classList.remove("hidden");
     lyricsContainer.innerHTML = "";
-    nextLevelButton.style.display = "none"; // Hide next level button when starting a level
+    nextLevelButton.classList.add("hidden"); // Hide next level button when starting a level
     updateScore();
     updateProgress();
     switch (level) {
@@ -72,7 +82,7 @@ function updateBuddy(message) {
 
 // Level View with Padlocks
 function showLevels() {
-    document.getElementById("levelSelector").style.display = "block";
+    levelSelector.classList.remove("hidden");
     for (let i = 1; i <= 4; i++) {
         levelButtons[i].classList.remove("locked");
         if (!completedLevels.includes(i)) {
@@ -80,18 +90,21 @@ function showLevels() {
             levelButtons[i].disabled = true;
         } else {
             levelButtons[i].disabled = false;
-            levelButtons[i].onclick = () => startLevel(i);
+            levelButtons[i].onclick = () => {
+                startLevel(i);
+                hideLevels();
+            };
         }
     }
 }
 
 function hideLevels() {
-    document.getElementById("levelSelector").style.display = "none";
+    levelSelector.classList.add("hidden");
 }
 
-// Level 1: Bottle Knock (Existing Game)
+// Level 1: Bottle Knock (10x10 Grid Arrangement)
 function startBottleKnock() {
-    bottleWall.style.display = "block";
+    bottleWall.classList.remove("hidden");
     renderBottles();
     wiggleBottles();
     lyricsContainer.innerHTML = `<p>Let’s start the magic adventure! 100 green bottles standing on the wall.</p>`;
@@ -99,13 +112,21 @@ function startBottleKnock() {
 
 function renderBottles() {
     bottleWall.innerHTML = "";
-    for (let i = 0; i < numberOfBottles; i++) {
+    for (let i = 0; i < 100; i++) { // 100 bottles in a 10x10 grid
         let bottle = document.createElement("div");
         bottle.classList.add("bottle");
         bottle.setAttribute("id", `bottle${i}`);
         bottle.addEventListener("click", () => takeOneDown());
         bottleWall.appendChild(bottle);
     }
+    // Ensure 10x10 grid by adjusting CSS positioning
+    const bottles = document.querySelectorAll(".bottle");
+    bottles.forEach((bottle, index) => {
+        const row = Math.floor(index / 10);
+        const col = index % 10;
+        bottle.style.gridRow = row + 1;
+        bottle.style.gridColumn = col + 1;
+    });
 }
 
 function wiggleBottles() {
@@ -153,8 +174,8 @@ function takeOneDown() {
 
 // Level 2: Bottle Stack (Pyramid Drag-and-Drop, 5 Base to 1 Top)
 function startBottleStack() {
-    bottleWall.style.display = "none";
-    gameArea.style.display = "block";
+    bottleWall.classList.add("hidden");
+    gameArea.classList.remove("hidden");
     gameArea.innerHTML = `<h2>Build a Bottle Pyramid (5 at Base, 1 at Top)!</h2><div class="bottle-stack" id="stackArea"></div>`;
     numberOfBottles = 0; // Reset for stacking
     stars = 0;
@@ -246,8 +267,8 @@ function checkPyramidComplete() {
 
 // Level 3: Bottle Catch (Add Bottle on Catch, No Change on Miss)
 function startBottleCatch() {
-    bottleWall.style.display = "none";
-    gameArea.style.display = "block";
+    bottleWall.classList.add("hidden");
+    gameArea.classList.remove("hidden");
     gameArea.innerHTML = `<h2>Catch the Falling Bottles!</h2><div class="bottle-catch" id="catchArea"><div class="basket" id="basket"></div></div>`;
     numberOfBottles = 0; // Track caught bottles
     stars = 0;
@@ -315,8 +336,8 @@ function isColliding(bottle, basket) {
 
 // Level 4: Bottle Puzzle (Fixed)
 function startBottlePuzzle() {
-    bottleWall.style.display = "none";
-    gameArea.style.display = "block";
+    bottleWall.classList.add("hidden");
+    gameArea.classList.remove("hidden");
     gameArea.innerHTML = `<h2>Solve the Bottle Puzzle!</h2><div class="bottle-puzzle" id="puzzleArea"></div>`;
     numberOfBottles = 0; // Reset for puzzle
     stars = 0;
@@ -425,15 +446,13 @@ function speakLyrics(text) {
 }
 
 function celebrateEnd() {
-    bottleWall.style.background = "#ffebee";
-    bottleWall.style.animation = "celebrate 2s infinite";
-    document.body.style.background = "#fff3cd";
+    bottleWall.classList.add("celebrate");
+    document.body.classList.add("celebrate-body");
     cheerSound.play();
     launchConfetti();
     setTimeout(() => {
-        bottleWall.style.background = "none";
-        bottleWall.style.animation = "none";
-        document.body.style.backgroundImage = "url('/wall.jpeg')";
+        bottleWall.classList.remove("celebrate");
+        document.body.classList.remove("celebrate-body");
     }, 6000);
 }
 
@@ -447,8 +466,9 @@ function launchConfetti() {
 }
 
 function showNextLevelButton() {
-    nextLevelButton.style.display = "block";
-    takeOneButton.style.display = "none"; // Hide the "Knock One Down" button
+    console.log("Showing Next Level button"); // Debug log
+    nextLevelButton.classList.remove("hidden");
+    takeOneButton.classList.add("hidden"); // Hide the "Knock One Down" button
     updateBuddy(`Great job! Click "Next Level" to continue!`);
 }
 
@@ -457,14 +477,14 @@ function startNextLevel() {
         currentLevel++;
         completedLevels.push(currentLevel);
         startLevel(currentLevel);
-        nextLevelButton.style.display = "none";
-        takeOneButton.style.display = "block"; // Show the "Knock One Down" button for Level 1, adjust for others
+        nextLevelButton.classList.add("hidden");
+        takeOneButton.classList.remove("hidden"); // Show the "Knock One Down" button for Level 1, adjust for others
         updateLevelLocks();
         updateBuddy(`Level ${currentLevel} unlocked! Let’s play!`);
     } else {
         updateBuddy(`You’re a Bottle Master! 🎉 Play again for more fun!`);
-        nextLevelButton.style.display = "none";
-        takeOneButton.style.display = "none";
+        nextLevelButton.classList.add("hidden");
+        takeOneButton.classList.add("hidden");
     }
 }
 
@@ -483,8 +503,36 @@ function updateLevelLocks() {
         } else {
             levelButtons[i].classList.remove("locked");
             levelButtons[i].disabled = false;
-            levelButtons[i].onclick = () => startLevel(i);
+            levelButtons[i].onclick = () => {
+                startLevel(i);
+                hideLevels();
+            };
         }
+    }
+}
+
+function dragStart(e) {
+    const bottle = e.target;
+    bottle.classList.add("dragging");
+    e.dataTransfer.setData("text/plain", bottle.id);
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function drop(e) {
+    e.preventDefault();
+    const id = e.dataTransfer.getData("text/plain");
+    const bottle = document.getElementById(id);
+    if (bottle) {
+        const rect = e.target.getBoundingClientRect();
+        const x = e.clientX - rect.left - 25; // Center bottle
+        const y = e.clientY - rect.top - 50;
+        bottle.style.left = `${x}px`;
+        bottle.style.top = `${y}px`;
+        bottle.classList.remove("dragging");
+        checkPyramidComplete();
     }
 }
 

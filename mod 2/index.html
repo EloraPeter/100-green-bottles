@@ -6,24 +6,22 @@
     <title>Bottle Magic Adventure Levels</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js" rel="stylesheet">
-    <audio id="bottleBreak" src="/bottle-break.mp3" preload="auto"></audio>
-    <audio id="cheer" src="/cheer-sound.mp3" preload="auto"></audio>
 </head>
 <body>
     <div class="main">
         <h1>Bottle Magic Adventure Levels!</h1>
         <div class="character" id="bottleBuddy">
-            <img src="/bottle-buddy.png" alt="Bottle Buddy" class="buddy-img">
+            <img src="/bottle-buddy.png" alt="Bottle Buddy">
             <p id="buddyText">Hi! Let’s start our bottle adventure!</p>
         </div>
-        <button id="viewLevels" onclick="showLevels()">View Levels</button>
-        <div id="levelSelector" style="display: none;">
+        <button id="viewLevels">View Levels</button>
+        <div id="levelSelector" class="hidden">
             <h2>All Levels:</h2>
             <button id="level1Btn">Level 1: Knock Bottles</button>
             <button id="level2Btn">Level 2: Stack Bottles</button>
             <button id="level3Btn">Level 3: Catch Bottles</button>
             <button id="level4Btn">Level 4: Bottle Puzzle</button>
-            <button onclick="hideLevels()">Close</button>
+            <button>Close</button>
         </div>
         <div id="progress">
             <p>Progress: Level <span id="currentLevel">1</span> | Stars: <span id="stars">0</span></p>
@@ -32,17 +30,15 @@
         <div id="lyrics" class="lyrics-box"></div>
         <div class="wall" id="bottleWall"></div>
         <div class="game-area" id="gameArea"></div>
-        <button id="takeOne" onclick="takeOneDown()" disabled>Knock One Down!</button>
-        <button id="nextLevel" onclick="startNextLevel()" >Next Level!</button>
+        <button id="takeOne">Knock One Down!</button>
+        <button id="nextLevel">Next Level!</button>
         <div id="score" class="score">Bottles Left: 100 | Stars: 0</div>
         <div id="rewards" class="rewards">Collect Stars for Fun Prizes!</div>
     </div>
 
+    <audio id="bottleBreak" src="/bottle-break.mp3" preload="auto"></audio>
+    <audio id="cheer" src="/cheer-sound.mp3" preload="auto"></audio>
+
     <script src="script.js"></script>
 </body>
 </html>
-
-
-
-
-<!-- style="display: none;" -->
