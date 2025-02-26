@@ -234,7 +234,7 @@ button:disabled {
     display: none;
 }
 
-.bottle-stack {
+/* .bottle-stack {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -252,7 +252,7 @@ button:disabled {
     position: absolute;
     transition: transform 0.3s, top 0.3s, left 0.3s;
     cursor: move;
-}
+} */
 
 .bottle-catch {
     position: relative;
