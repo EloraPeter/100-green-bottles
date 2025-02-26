@@ -457,6 +457,7 @@ function celebrateEnd() {
 }
 
 function launchConfetti() {
+    console.log("Confetti function called");
     confetti({
         particleCount: 150,
         spread: 70,
