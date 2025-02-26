@@ -31,7 +31,7 @@ function startLevel(level) {
     document.getElementById("currentLevel").textContent = currentLevel;
     takeOneButton.disabled = false;
     gameArea.style.display = "none";
-    bottleWall.style.display = "block";
+    // bottleWall.style.display = "block";
     lyricsContainer.innerHTML = "";
     nextLevelButton.style.display = "none"; // Hide next level button when starting a level
     updateScore();
