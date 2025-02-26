@@ -262,13 +262,13 @@ button:disabled {
     border-radius: 15px;
 }
 
-.catch-bottle {
+/* .catch-bottle {
     width: 50px;
     height: 100px;
     background: url("/bottle-removebg-preview.png") no-repeat center/contain;
     position: absolute;
     transition: top 2s linear;
-}
+} */
 
 .basket {
     width: 100px;
