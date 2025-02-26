@@ -1,3 +1,4 @@
+
 // Initialize variables
 let currentLevel = 1;
 let numberOfBottles = 0; // Reset for each level as needed
@@ -153,7 +154,7 @@ function takeOneDown() {
             bottleBreakSound.play();
             setTimeout(() => bottleToFall.remove(), 1200);
         }
-        
+
         bottleWord = numberOfBottles === 1 ? "bottle" : "bottles";
         text += ` ${numberOfBottles} green ${bottleWord} standing on the wall!`;
         lyricsContainer.innerHTML += `<p>${text}</p>`;
@@ -455,44 +456,46 @@ function celebrateEnd() {
         document.body.classList.remove("celebrate-body");
     }, 6000);
 }
+import confetti from 'https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.js';
 
 function launchConfetti() {
+    
     console.log("Confetti function called");
     var count = 200;
-var defaults = {
-  origin: { y: 0.7 }
-};
+    var defaults = {
+        origin: { y: 0.7 }
+    };
 
-function fire(particleRatio, opts) {
-  confetti({
-    ...defaults,
-    ...opts,
-    particleCount: Math.floor(count * particleRatio)
-  });
-}
+    function fire(particleRatio, opts) {
+        confetti({
+            ...defaults,
+            ...opts,
+            particleCount: Math.floor(count * particleRatio)
+        });
+    }
 
-fire(0.25, {
-  spread: 26,
-  startVelocity: 55,
-});
-fire(0.2, {
-  spread: 60,
-});
-fire(0.35, {
-  spread: 100,
-  decay: 0.91,
-  scalar: 0.8
-});
-fire(0.1, {
-  spread: 120,
-  startVelocity: 25,
-  decay: 0.92,
-  scalar: 1.2
-});
-fire(0.1, {
-  spread: 120,
-  startVelocity: 45,
-});
+    fire(0.25, {
+        spread: 26,
+        startVelocity: 55,
+    });
+    fire(0.2, {
+        spread: 60,
+    });
+    fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8
+    });
+    fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2
+    });
+    fire(0.1, {
+        spread: 120,
+        startVelocity: 45,
+    });
 }
 
 function showNextLevelButton() {
