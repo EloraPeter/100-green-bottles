@@ -177,6 +177,7 @@ function startBottleStack() {
     console.log("Starting Bottle Stack game");
     bottleWall.classList.add("hidden");
     gameArea.classList.remove("hidden");
+    takeOneButton
     gameArea.innerHTML = `<h2>Build a Bottle Pyramid (5 at Base, 1 at Top)!</h2><div class="bottle-stack" id="stackArea"></div>`;
     numberOfBottles = 0; // Reset for stacking
     stars = 0;
