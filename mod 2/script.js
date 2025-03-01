@@ -262,19 +262,20 @@ function drop(e) {
             }
         });
 
-        if (closestHint && minDistance < 50) { // Snap only if close to a hint
+        // Snap bottle only if it's near a hint (within 50px)
+        if (closestHint && minDistance < 50) { 
             draggedBottle.style.left = closestHint.style.left;
             draggedBottle.style.top = closestHint.style.top;
-            draggedBottle.classList.add("placed"); // Add animation class
+            draggedBottle.setAttribute("data-row", closestHint.getAttribute("data-row")); // Mark its row
+            draggedBottle.classList.add("placed");
 
             setTimeout(() => {
-                draggedBottle.classList.remove("placed"); // Remove after effect
+                draggedBottle.classList.remove("placed"); // Remove effect
             }, 500);
-        
+            
             playSnapSound(); // Play sound when placed
+            checkPyramidComplete(); // Check if the structure is done
         }
-        
-        checkPyramidComplete();
     }
 }
 
@@ -300,37 +301,21 @@ function playSnapSound() {
 
 function checkPyramidComplete() {
     const bottles = document.querySelectorAll(".stack-bottle");
-    const positions = [
-        { x: 150, y: 350, count: 5 }, // Base (5 bottles, spread across 300px)
-        { x: 200, y: 300, count: 4 }, // Second row
-        { x: 250, y: 250, count: 3 }, // Third row
-        { x: 300, y: 200, count: 2 }, // Fourth row
-        { x: 350, y: 150, count: 1 }  // Top
-    ];
-
-    let correct = true;
-    // let placed = 0;
     let rowCounts = Array(5).fill(0); // Track bottles per row
+
     bottles.forEach(bottle => {
-        let found = false;
-        for (let i = 0; i < positions.length; i++) {
-            const pos = positions[i];
-            if (Math.abs(parseInt(bottle.style.left) - pos.x) < 50 && Math.abs(parseInt(bottle.style.top) - pos.y) < 50) {
-                found = true;
-                rowCounts[i]++;
-                placed++;
-                break;
-            }
+        let row = bottle.getAttribute("data-row");
+        if (row !== null) {
+            rowCounts[row]++;
         }
-        if (!found) correct = false;
     });
 
-    // Check if each row has the correct number of bottles
-    for (let i = 0; i < positions.length; i++) {
-        if (rowCounts[i] !== positions[i].count) correct = false;
-    }
+    // Correct bottle counts for each row in pyramid
+    const correctRowCounts = [5, 4, 3, 2, 1];
 
-    if (correct && placed === 15) { // All 15 bottles placed correctly in pyramid
+    let correct = rowCounts.every((count, index) => count === correctRowCounts[index]);
+
+    if (correct) { 
         stars += 30;
         gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
         speakLyrics("Yay! You built a perfect pyramid!");
@@ -338,6 +323,48 @@ function checkPyramidComplete() {
         showNextLevelButton();
     }
 }
+
+
+// function checkPyramidComplete() {
+//     const bottles = document.querySelectorAll(".stack-bottle");
+//     const positions = [
+//         { x: 150, y: 350, count: 5 }, // Base (5 bottles, spread across 300px)
+//         { x: 200, y: 300, count: 4 }, // Second row
+//         { x: 250, y: 250, count: 3 }, // Third row
+//         { x: 300, y: 200, count: 2 }, // Fourth row
+//         { x: 350, y: 150, count: 1 }  // Top
+//     ];
+
+//     let correct = true;
+//     // let placed = 0;
+//     let rowCounts = Array(5).fill(0); // Track bottles per row
+//     bottles.forEach(bottle => {
+//         let found = false;
+//         for (let i = 0; i < positions.length; i++) {
+//             const pos = positions[i];
+//             if (Math.abs(parseInt(bottle.style.left) - pos.x) < 50 && Math.abs(parseInt(bottle.style.top) - pos.y) < 50) {
+//                 found = true;
+//                 rowCounts[i]++;
+//                 placed++;
+//                 break;
+//             }
+//         }
+//         if (!found) correct = false;
+//     });
+
+//     // Check if each row has the correct number of bottles
+//     for (let i = 0; i < positions.length; i++) {
+//         if (rowCounts[i] !== positions[i].count) correct = false;
+//     }
+
+//     if (correct && placed === 15) { // All 15 bottles placed correctly in pyramid
+//         stars += 30;
+//         gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
+//         speakLyrics("Yay! You built a perfect pyramid!");
+//         celebrateEnd();
+//         showNextLevelButton();
+//     }
+// }
 
 // Level 3: Bottle Catch (Add Bottle on Catch, No Change on Miss)
 function startBottleCatch() {
