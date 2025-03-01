@@ -192,7 +192,9 @@ function createStackBottles() {
     for (let i = 0; i < 15; i++) { // 15 bottles to drag (more than needed for pyramid)
         let bottle = document.createElement("div");
         bottle.classList.add("stack-bottle");
+        bottle.id = `bottle-${i}`; // Assign unique ID
         bottle.draggable = true;
+        bottle.style.position = "absolute"; // Required for drag-drop positioning
         bottle.addEventListener("dragstart", dragStart);
         bottle.addEventListener("dragover", dragOver);
         bottle.addEventListener("drop", drop);
