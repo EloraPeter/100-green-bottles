@@ -132,7 +132,7 @@ button:disabled {
 .bottle {
     width: 70px;
     height: 140px;
-    background: url("/bottle-removebg-preview.png") no-repeat center/contain;
+    background: url("/images/bottle-removebg-preview.png") no-repeat center/contain;
     cursor: pointer;
     position: relative;
     transition: transform 1s ease-in-out, opacity 1s;
@@ -255,7 +255,7 @@ button:disabled {
 .stack-bottle {
     width: 50px;
     height: 100px;
-    background: url("/bottle-removebg-preview.png") no-repeat center/contain;
+    background: url("/images/bottle-removebg-preview.png") no-repeat center/contain;
     position: absolute;
     transition: transform 0.3s, top 0.3s, left 0.3s;
     cursor: move;
@@ -272,7 +272,7 @@ button:disabled {
 .catch-bottle {
     width: 50px;
     height: 100px;
-    background: url("/bottle-removebg-preview.png") no-repeat center/contain;
+    background: url("/images/bottle-removebg-preview.png") no-repeat center/contain;
     position: absolute;
     transition: top 2s linear;
 }
@@ -303,7 +303,7 @@ button:disabled {
 .puzzle-piece {
     width: 100px;
     height: 100px;
-    background: url("/bottle-removebg-preview.png") no-repeat center/contain;
+    background: url("/images/bottle-removebg-preview.png") no-repeat center/contain;
     position: absolute;
     cursor: move;
     border: 2px solid #fff;

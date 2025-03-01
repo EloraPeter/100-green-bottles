@@ -456,7 +456,7 @@ function celebrateEnd() {
         document.body.classList.remove("celebrate-body");
     }, 6000);
 }
-import confetti from 'https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.js';
+// import confetti from 'https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.js';
 
 function launchConfetti() {
     
