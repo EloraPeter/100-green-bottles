@@ -8,6 +8,7 @@ let cheerSound = document.getElementById("cheer");
 
 // DOM elements
 let lyricsContainer = document.getElementById("lyrics");
+let lyricsBox = document.getElementsByClassName("lyrics-box")
 let takeOneButton = document.getElementById("takeOne");
 let bottleWall = document.getElementById("bottleWall");
 let scoreDisplay = document.getElementById("score");
@@ -178,6 +179,7 @@ function startBottleStack() {
     bottleWall.classList.add("hidden");
     gameArea.classList.remove("hidden");
     lyricsContainer.classList.add("hidden");
+    lyricsBox.classList.add("hidden");
     takeOneButton.classList.add("hidden");
     gameArea.innerHTML = `<h2>Build a Bottle Pyramid (5 at Base, 1 at Top)!</h2><div class="bottle-stack" id="stackArea"></div>`;
     numberOfBottles = 0; // Reset for stacking
@@ -463,7 +465,7 @@ function celebrateEnd() {
 // import confetti from 'https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.9.3/confetti.js';
 
 function launchConfetti() {
-    
+
     console.log("Confetti function called");
     var count = 200;
     var defaults = {
