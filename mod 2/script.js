@@ -1,4 +1,3 @@
-
 // Initialize variables
 let currentLevel = 1;
 let numberOfBottles = 0; // Reset for each level as needed
