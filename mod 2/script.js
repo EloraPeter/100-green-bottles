@@ -241,15 +241,54 @@ function dragOver(e) {
 function drop(e) {
     e.preventDefault();
     if (draggedBottle) {
-        const id = e.dataTransfer.getData("text/plain");
-        const bottle = document.getElementById(id);
-        const rect = e.target.getBoundingClientRect();
-        const x = e.clientX - rect.left - 25; // Center bottle
-        const y = e.clientY - rect.top - 50;
-        bottle.style.left = `${x}px`;
-        bottle.style.top = `${y}px`;
+        const hints = document.querySelectorAll(".drop-hint");
+        let closestHint = null;
+        let minDistance = Infinity;
+
+        hints.forEach(hint => {
+            let dx = parseInt(hint.style.left) - e.clientX;
+            let dy = parseInt(hint.style.top) - e.clientY;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestHint = hint;
+            }
+        });
+
+        if (closestHint && minDistance < 50) { // Snap only if close to a hint
+            draggedBottle.style.left = closestHint.style.left;
+            draggedBottle.style.top = closestHint.style.top;
+            draggedBottle.classList.add("placed"); // Add animation class
+
+            setTimeout(() => {
+                draggedBottle.classList.remove("placed"); // Remove after effect
+            }, 500);
+        
+            playSnapSound(); // Play sound when placed
+        }
+        
         checkPyramidComplete();
     }
+}
+
+
+// function drop(e) {
+//     e.preventDefault();
+//     if (draggedBottle) {
+//         const id = e.dataTransfer.getData("text/plain");
+//         const bottle = document.getElementById(id);
+//         const rect = e.target.getBoundingClientRect();
+//         const x = e.clientX - rect.left - 25; // Center bottle
+//         const y = e.clientY - rect.top - 50;
+//         bottle.style.left = `${x}px`;
+//         bottle.style.top = `${y}px`;
+//         checkPyramidComplete();
+//     }
+// }
+
+function playSnapSound() {
+    let audio = new Audio('snap.mp3'); // Add a soft snap sound
+    audio.play();
 }
 
 function checkPyramidComplete() {

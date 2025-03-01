@@ -279,6 +279,12 @@ button:disabled {
     pointer-events: none; /* Prevent interaction */
 }
 
+.placed {
+    transition: 0.2s ease-in-out;
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); /* Glow effect */
+}
+
 
 .catch-bottle {
     width: 50px;
