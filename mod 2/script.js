@@ -63,6 +63,22 @@ function startLevel(level) {
     updateBuddy(`Level ${level} started! Let’s have fun!`);
 }
 
+function scrollToBottom() {
+   
+    lyricsContainer.scrollTo({ top: lyricsBox.scrollHeight, behavior: "smooth" });
+}
+
+// Example: Call this function after adding new lyrics
+function addLyrics(text) {
+    const lyricsBox = document.querySelector(".lyrics-box");
+    const newLine = document.createElement("p");
+    newLine.textContent = text;
+    lyricsBox.appendChild(newLine);
+
+    scrollToBottom(); // Scroll to bottom after adding new lyrics
+}
+
+
 function updateProgress() {
     const maxStars = 100 * currentLevel; // Example: 100 stars per level to progress
     const progress = (stars / maxStars) * 100;
