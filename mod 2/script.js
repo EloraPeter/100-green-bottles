@@ -184,7 +184,30 @@ function startBottleStack() {
     stars = 0;
     updateScore();
     createStackBottles();
+    createDropZones(); // Add this function to show hints
 }
+
+function createDropZones() {
+    const stackArea = document.getElementById("stackArea");
+    const positions = [
+        { x: 150, y: 350, count: 5 },
+        { x: 200, y: 300, count: 4 },
+        { x: 250, y: 250, count: 3 },
+        { x: 300, y: 200, count: 2 },
+        { x: 350, y: 150, count: 1 }
+    ];
+
+    positions.forEach((pos, row) => {
+        for (let i = 0; i < pos.count; i++) {
+            let hint = document.createElement("div");
+            hint.classList.add("drop-hint");
+            hint.style.left = `${pos.x + i * 50 - (pos.count * 25)}px`; // Center align
+            hint.style.top = `${pos.y}px`;
+            stackArea.appendChild(hint);
+        }
+    });
+}
+
 
 function createStackBottles() {
     const stackArea = document.getElementById("stackArea");

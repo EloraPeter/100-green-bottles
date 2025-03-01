@@ -269,6 +269,17 @@ button:disabled {
     border-radius: 15px;
 }
 
+.drop-hint {
+    width: 50px;
+    height: 50px;
+    border: 2px dashed gray; /* Dashed outline */
+    border-radius: 50%;
+    position: absolute;
+    opacity: 0.5; /* Slightly visible */
+    pointer-events: none; /* Prevent interaction */
+}
+
+
 .catch-bottle {
     width: 50px;
     height: 100px;
