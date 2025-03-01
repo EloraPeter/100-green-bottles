@@ -107,7 +107,7 @@ button:disabled {
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
-    max-height: 250px;
+    max-height: 150px;
     animation: fadeIn 1s ease-in;
 }
 
