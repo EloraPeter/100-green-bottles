@@ -450,7 +450,7 @@ function celebrateEnd() {
     bottleWall.classList.add("celebrate");
     document.body.classList.add("celebrate-body");
     cheerSound.play();
-    launchConfetti();
+    // launchConfetti();
     setTimeout(() => {
         bottleWall.classList.remove("celebrate");
         document.body.classList.remove("celebrate-body");
