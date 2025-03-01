@@ -500,7 +500,7 @@ function launchConfetti() {
 
 function showNextLevelButton() {
     console.log("Showing Next Level button"); // Debug log
-    nextLevelButton.classList.toggle("hidden");
+    nextLevelButton.classList.remove("hidden");
     takeOneButton.classList.add("hidden"); // Hide the "Knock One Down" button
     updateBuddy(`Great job! Click "Next Level" to continue!`);
 }
