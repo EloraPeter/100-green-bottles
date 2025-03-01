@@ -503,6 +503,7 @@ function showNextLevelButton() {
     nextLevelButton.classList.remove("hidden");
     takeOneButton.classList.add("hidden"); // Hide the "Knock One Down" button
     updateBuddy(`Great job! Click "Next Level" to continue!`);
+    nextLevelButton.addEventListener("click", startNextLevel); // Add event listener for Next Level button
 }
 
 function startNextLevel() {
