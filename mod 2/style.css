@@ -109,6 +109,9 @@ button:disabled {
     overflow-y: auto;
     max-height: 150px;
     animation: fadeIn 1s ease-in;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    scroll-snap-align:bottom;
 }
 
 @keyframes fadeIn {
