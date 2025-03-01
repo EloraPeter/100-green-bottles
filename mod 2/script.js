@@ -646,30 +646,30 @@ function updateLevelLocks() {
     }
 }
 
-function dragStart(e) {
-    const bottle = e.target;
-    bottle.classList.add("dragging");
-    e.dataTransfer.setData("text/plain", bottle.id);
-}
+// function dragStart(e) {
+//     const bottle = e.target;
+//     bottle.classList.add("dragging");
+//     e.dataTransfer.setData("text/plain", bottle.id);
+// }
 
-function dragOver(e) {
-    e.preventDefault();
-}
+// function dragOver(e) {
+//     e.preventDefault();
+// }
 
-function drop(e) {
-    e.preventDefault();
-    const id = e.dataTransfer.getData("text/plain");
-    const bottle = document.getElementById(id);
-    if (bottle) {
-        const rect = e.target.getBoundingClientRect();
-        const x = e.clientX - rect.left - 25; // Center bottle
-        const y = e.clientY - rect.top - 50;
-        bottle.style.left = `${x}px`;
-        bottle.style.top = `${y}px`;
-        bottle.classList.remove("dragging");
-        checkPyramidComplete();
-    }
-}
+// function drop(e) {
+//     e.preventDefault();
+//     const id = e.dataTransfer.getData("text/plain");
+//     const bottle = document.getElementById(id);
+//     if (bottle) {
+//         const rect = e.target.getBoundingClientRect();
+//         const x = e.clientX - rect.left - 25; // Center bottle
+//         const y = e.clientY - rect.top - 50;
+//         bottle.style.left = `${x}px`;
+//         bottle.style.top = `${y}px`;
+//         bottle.classList.remove("dragging");
+//         checkPyramidComplete();
+//     }
+// }
 
 document.addEventListener("DOMContentLoaded", () => {
     startLevel(1);
