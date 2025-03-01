@@ -189,20 +189,27 @@ function startBottleStack() {
 
 function createDropZones() {
     const stackArea = document.getElementById("stackArea");
+    const baseX = 120; // Starting x-position of the base row
+    const baseY = 350; // Bottom-most row (y-position)
+    const bottleSpacing = 60; // Space between bottles
+
     const positions = [
-        { x: 150, y: 350, count: 5 },
-        { x: 200, y: 300, count: 4 },
-        { x: 250, y: 250, count: 3 },
-        { x: 300, y: 200, count: 2 },
-        { x: 350, y: 150, count: 1 }
+        { y: baseY, count: 5 },  // Base row (5 bottles)
+        { y: baseY - 60, count: 4 },  // Row 2 (4 bottles)
+        { y: baseY - 120, count: 3 }, // Row 3 (3 bottles)
+        { y: baseY - 180, count: 2 }, // Row 4 (2 bottles)
+        { y: baseY - 240, count: 1 }  // Top row (1 bottle)
     ];
 
-    positions.forEach((pos, row) => {
-        for (let i = 0; i < pos.count; i++) {
+    positions.forEach((row, rowIndex) => {
+        let startX = baseX + (rowIndex * (bottleSpacing / 2)); // Center each row
+
+        for (let i = 0; i < row.count; i++) {
             let hint = document.createElement("div");
             hint.classList.add("drop-hint");
-            hint.style.left = `${pos.x + i * 50 - (pos.count * 25)}px`; // Center align
-            hint.style.top = `${pos.y}px`;
+            hint.style.left = `${startX + i * bottleSpacing}px`;
+            hint.style.top = `${row.y}px`;
+            hint.setAttribute("data-row", rowIndex); // Mark row for checking
             stackArea.appendChild(hint);
         }
     });
