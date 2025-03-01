@@ -174,6 +174,7 @@ function takeOneDown() {
 
 // Level 2: Bottle Stack (Pyramid Drag-and-Drop, 5 Base to 1 Top)
 function startBottleStack() {
+    console.log("Starting Bottle Stack game");
     bottleWall.classList.add("hidden");
     gameArea.classList.remove("hidden");
     gameArea.innerHTML = `<h2>Build a Bottle Pyramid (5 at Base, 1 at Top)!</h2><div class="bottle-stack" id="stackArea"></div>`;
