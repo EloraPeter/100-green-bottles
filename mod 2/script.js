@@ -506,6 +506,7 @@ function showNextLevelButton() {
 }
 
 function startNextLevel() {
+    console.log("Next Level button clicked");
     if (currentLevel < 4) {
         currentLevel++;
         completedLevels.push(currentLevel);
