@@ -240,7 +240,7 @@ function checkPyramidComplete() {
     ];
 
     let correct = true;
-    let placed = 0;
+    // let placed = 0;
     let rowCounts = Array(5).fill(0); // Track bottles per row
     bottles.forEach(bottle => {
         let found = false;
