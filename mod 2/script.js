@@ -658,18 +658,27 @@ function dragOver(e) {
 
 function drop(e) {
     e.preventDefault();
+    
     const id = e.dataTransfer.getData("text/plain");
     const bottle = document.getElementById(id);
-    if (bottle) {
-        const rect = e.target.getBoundingClientRect();
+    const dropZone = e.target.closest("#stackArea"); // Ensure it's inside pyramid area
+
+    if (bottle && dropZone) {
+        const rect = dropZone.getBoundingClientRect();
         const x = e.clientX - rect.left - 25; // Center bottle
         const y = e.clientY - rect.top - 50;
-        bottle.style.left = `${x}px`;
-        bottle.style.top = `${y}px`;
+
+        // Ensure bottle stays inside the drop zone
+        const maxX = rect.width - 50;
+        const maxY = rect.height - 100;
+        bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+        bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+
         bottle.classList.remove("dragging");
         checkPyramidComplete();
     }
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     startLevel(1);
