@@ -211,6 +211,13 @@ function createDropZones() {
             hint.style.left = `${startX + i * bottleSpacing}px`;
             hint.style.top = `${row.y}px`;
             hint.setAttribute("data-row", rowIndex); // Mark row for checking
+            
+            // Add center dot to drop zone
+            let centerDot = document.createElement("div");
+            centerDot.classList.add("center-dot");
+            centerDot.classList.add("drop-zone-dot"); // Specific class for drop zone dots
+            hint.appendChild(centerDot);
+            
             stackArea.appendChild(hint);
         }
     });
@@ -228,6 +235,13 @@ function createStackBottles() {
         // Initial positioning (e.g., stack them on the left side)
         bottle.style.left = `${10 + (i % 5) * 60}px`; // Staggered initial placement
         bottle.style.top = `${10 + Math.floor(i / 5) * 60}px`;
+        
+        // Add center dot to bottle
+        let centerDot = document.createElement("div");
+        centerDot.classList.add("center-dot");
+        centerDot.classList.add("bottle-dot"); // Specific class for bottle dots
+        bottle.appendChild(centerDot);
+        
         bottle.addEventListener("dragstart", dragStart);
         bottle.addEventListener("dragover", dragOver); // Allow bottles to be drop targets
         bottle.addEventListener("drop", drop);

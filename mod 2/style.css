@@ -264,6 +264,26 @@ button:disabled {
     transition: transform 0.3s, top 0.3s, left 0.3s;
     cursor: move;
 }
+/* General styling for center dots */
+.center-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centers the dot perfectly */
+}
+
+/* Specific styling for drop zone dots */
+.drop-zone-dot {
+    background-color: red; /* Red dot for drop zones */
+}
+
+/* Specific styling for bottle dots */
+.bottle-dot {
+    background-color: blue; /* Blue dot for bottles */
+}
 
 .bottle-catch {
     position: relative;
