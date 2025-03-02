@@ -292,10 +292,13 @@ button:disabled {
     background: #f0f0f0;
     border-radius: 15px;
 }
+.dragging {
+    opacity: 0.5;
+}
 
 .drop-hint {
     width: 50px;
-    height: 100px;
+    height: 70px;
     border: 2px dashed gray; /* Dashed outline */
     border-radius: 50%;
     position: absolute;
