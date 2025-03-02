@@ -174,7 +174,6 @@ function takeOneDown() {
 }
 
 // Level 2: Bottle Stack (Pyramid Drag-and-Drop, 5 Base to 1 Top)
-// Level 2: Bottle Stack (Pyramid Drag-and-Drop, 5 Base to 1 Top)
 function startBottleStack() {
     console.log("Starting Bottle Stack game");
     bottleWall.classList.add("hidden");
