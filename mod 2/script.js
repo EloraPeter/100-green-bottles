@@ -174,6 +174,7 @@ function takeOneDown() {
 }
 
 // Level 2: Bottle Stack (Pyramid Drag-and-Drop, 5 Base to 1 Top)
+// Level 2: Bottle Stack (Pyramid Drag-and-Drop, 5 Base to 1 Top)
 function startBottleStack() {
     console.log("Starting Bottle Stack game");
     bottleWall.classList.add("hidden");
@@ -216,18 +217,20 @@ function createDropZones() {
     });
 }
 
-
 function createStackBottles() {
     const stackArea = document.getElementById("stackArea");
-    stackArea.innerHTML = "";
+    // Don't clear innerHTML here to preserve drop zones
     for (let i = 0; i < 15; i++) { // 15 bottles to drag (more than needed for pyramid)
         let bottle = document.createElement("div");
         bottle.classList.add("stack-bottle");
         bottle.id = `bottle-${i}`; // Assign unique ID
         bottle.draggable = true;
         bottle.style.position = "absolute"; // Required for drag-drop positioning
+        // Initial positioning (e.g., stack them on the left side)
+        bottle.style.left = `${10 + (i % 5) * 60}px`; // Staggered initial placement
+        bottle.style.top = `${10 + Math.floor(i / 5) * 60}px`;
         bottle.addEventListener("dragstart", dragStart);
-        bottle.addEventListener("dragover", dragOver);
+        bottle.addEventListener("dragover", dragOver); // Allow bottles to be drop targets
         bottle.addEventListener("drop", drop);
         stackArea.appendChild(bottle);
     }
@@ -303,64 +306,6 @@ function drop(e) {
     }
 }
 
-// function dragStart(e) {
-//     draggedBottle = e.target;
-//     e.dataTransfer.setData("text/plain", e.target.id);
-// }
-
-// function dragOver(e) {
-//     e.preventDefault();
-// }
-
-// function drop(e) {
-//     e.preventDefault();
-//     if (draggedBottle) {
-//         const hints = document.querySelectorAll(".drop-hint");
-//         let closestHint = null;
-//         let minDistance = Infinity;
-
-//         hints.forEach(hint => {
-//             let dx = parseInt(hint.style.left) - e.clientX;
-//             let dy = parseInt(hint.style.top) - e.clientY;
-//             let distance = Math.sqrt(dx * dx + dy * dy);
-//             if (distance < minDistance) {
-//                 minDistance = distance;
-//                 closestHint = hint;
-//             }
-//         });
-
-//         // Snap bottle only if it's near a hint (within 50px)
-//         if (closestHint && minDistance < 50) { 
-//             draggedBottle.style.left = closestHint.style.left;
-//             draggedBottle.style.top = closestHint.style.top;
-//             draggedBottle.setAttribute("data-row", closestHint.getAttribute("data-row")); // Mark its row
-//             draggedBottle.classList.add("placed");
-
-//             setTimeout(() => {
-//                 draggedBottle.classList.remove("placed"); // Remove effect
-//             }, 500);
-            
-//             playSnapSound(); // Play sound when placed
-//             checkPyramidComplete(); // Check if the structure is done
-//         }
-//     }
-// }
-
-
-// function drop(e) {
-//     e.preventDefault();
-//     if (draggedBottle) {
-//         const id = e.dataTransfer.getData("text/plain");
-//         const bottle = document.getElementById(id);
-//         const rect = e.target.getBoundingClientRect();
-//         const x = e.clientX - rect.left - 25; // Center bottle
-//         const y = e.clientY - rect.top - 50;
-//         bottle.style.left = `${x}px`;
-//         bottle.style.top = `${y}px`;
-//         checkPyramidComplete();
-//     }
-// }
-
 function playSnapSound() {
     let audio = new Audio('snap.mp3'); // Add a soft snap sound
     audio.play();
@@ -373,7 +318,7 @@ function checkPyramidComplete() {
     bottles.forEach(bottle => {
         let row = bottle.getAttribute("data-row");
         if (row !== null) {
-            rowCounts[row]++;
+            rowCounts[parseInt(row)]++; // Ensure row is treated as an integer
         }
     });
 
@@ -390,6 +335,224 @@ function checkPyramidComplete() {
         showNextLevelButton();
     }
 }
+
+
+// function startBottleStack() {
+//     console.log("Starting Bottle Stack game");
+//     bottleWall.classList.add("hidden");
+//     gameArea.classList.remove("hidden");
+//     lyricsContainer.classList.add("hidden");
+//     takeOneButton.classList.add("hidden");
+//     gameArea.innerHTML = `<h2>Build a Bottle Pyramid (5 at Base, 1 at Top)!</h2><div class="bottle-stack" id="stackArea"></div>`;
+//     numberOfBottles = 0; // Reset for stacking
+//     stars = 0;
+//     updateScore();
+//     createStackBottles();
+//     createDropZones(); // Add this function to show hints
+// }
+
+// function createDropZones() {
+//     const stackArea = document.getElementById("stackArea");
+//     const baseX = 120; // Starting x-position of the base row
+//     const baseY = 350; // Bottom-most row (y-position)
+//     const bottleSpacing = 100; // Space between bottles
+
+//     const positions = [
+//         { y: baseY, count: 5 },  // Base row (5 bottles)
+//         { y: baseY - 100, count: 4 },  // Row 2 (4 bottles)
+//         { y: baseY - 200, count: 3 }, // Row 3 (3 bottles)
+//         { y: baseY - 300, count: 2 }, // Row 4 (2 bottles)
+//         { y: baseY - 400, count: 1 }  // Top row (1 bottle)
+//     ];
+
+//     positions.forEach((row, rowIndex) => {
+//         let startX = baseX + (rowIndex * (bottleSpacing / 2)); // Center each row
+
+//         for (let i = 0; i < row.count; i++) {
+//             let hint = document.createElement("div");
+//             hint.classList.add("drop-hint");
+//             hint.style.left = `${startX + i * bottleSpacing}px`;
+//             hint.style.top = `${row.y}px`;
+//             hint.setAttribute("data-row", rowIndex); // Mark row for checking
+//             stackArea.appendChild(hint);
+//         }
+//     });
+// }
+
+
+// function createStackBottles() {
+//     const stackArea = document.getElementById("stackArea");
+//     stackArea.innerHTML = "";
+//     for (let i = 0; i < 15; i++) { // 15 bottles to drag (more than needed for pyramid)
+//         let bottle = document.createElement("div");
+//         bottle.classList.add("stack-bottle");
+//         bottle.id = `bottle-${i}`; // Assign unique ID
+//         bottle.draggable = true;
+//         bottle.style.position = "absolute"; // Required for drag-drop positioning
+//         bottle.addEventListener("dragstart", dragStart);
+//         bottle.addEventListener("dragover", dragOver);
+//         bottle.addEventListener("drop", drop);
+//         stackArea.appendChild(bottle);
+//     }
+//     stackArea.addEventListener("dragover", dragOver);
+//     stackArea.addEventListener("drop", drop);
+// }
+
+// let draggedBottle = null; // Global variable to track the dragged bottle
+
+// function dragStart(e) {
+//     draggedBottle = e.target;
+//     draggedBottle.classList.add("dragging");
+//     e.dataTransfer.setData("text/plain", draggedBottle.id);
+// }
+
+// function dragOver(e) {
+//     e.preventDefault();
+// }
+
+// function drop(e) {
+//     e.preventDefault();
+    
+//     if (draggedBottle) {
+//         const id = e.dataTransfer.getData("text/plain");
+//         const bottle = document.getElementById(id);
+//         const dropZone = e.target.closest("#stackArea");
+
+//         if (bottle && dropZone) {
+//             const hints = document.querySelectorAll(".drop-hint");
+//             let closestHint = null;
+//             let minDistance = Infinity;
+
+//             // Check for nearest hint
+//             hints.forEach(hint => {
+//                 let dx = parseInt(hint.style.left) - e.clientX;
+//                 let dy = parseInt(hint.style.top) - e.clientY;
+//                 let distance = Math.sqrt(dx * dx + dy * dy);
+//                 if (distance < minDistance) {
+//                     minDistance = distance;
+//                     closestHint = hint;
+//                 }
+//             });
+
+//             // If close to a hint (within 50px), snap to it
+//             if (closestHint && minDistance < 50) {
+//                 bottle.style.left = closestHint.style.left;
+//                 bottle.style.top = closestHint.style.top;
+//                 bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
+//                 bottle.classList.add("placed");
+
+//                 setTimeout(() => {
+//                     bottle.classList.remove("placed");
+//                 }, 500);
+                
+//                 playSnapSound();
+//             } else {
+//                 // Otherwise, position freely within drop zone
+//                 const rect = dropZone.getBoundingClientRect();
+//                 const x = e.clientX - rect.left - 25; // Center bottle
+//                 const y = e.clientY - rect.top - 50;
+
+//                 // Ensure bottle stays inside the drop zone
+//                 const maxX = rect.width - 50;
+//                 const maxY = rect.height - 100;
+//                 bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+//                 bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+//             }
+
+//             bottle.classList.remove("dragging");
+//             checkPyramidComplete();
+//             draggedBottle = null; // Reset draggedBottle
+//         }
+//     }
+// }
+
+// // function dragStart(e) {
+// //     draggedBottle = e.target;
+// //     e.dataTransfer.setData("text/plain", e.target.id);
+// // }
+
+// // function dragOver(e) {
+// //     e.preventDefault();
+// // }
+
+// // function drop(e) {
+// //     e.preventDefault();
+// //     if (draggedBottle) {
+// //         const hints = document.querySelectorAll(".drop-hint");
+// //         let closestHint = null;
+// //         let minDistance = Infinity;
+
+// //         hints.forEach(hint => {
+// //             let dx = parseInt(hint.style.left) - e.clientX;
+// //             let dy = parseInt(hint.style.top) - e.clientY;
+// //             let distance = Math.sqrt(dx * dx + dy * dy);
+// //             if (distance < minDistance) {
+// //                 minDistance = distance;
+// //                 closestHint = hint;
+// //             }
+// //         });
+
+// //         // Snap bottle only if it's near a hint (within 50px)
+// //         if (closestHint && minDistance < 50) { 
+// //             draggedBottle.style.left = closestHint.style.left;
+// //             draggedBottle.style.top = closestHint.style.top;
+// //             draggedBottle.setAttribute("data-row", closestHint.getAttribute("data-row")); // Mark its row
+// //             draggedBottle.classList.add("placed");
+
+// //             setTimeout(() => {
+// //                 draggedBottle.classList.remove("placed"); // Remove effect
+// //             }, 500);
+            
+// //             playSnapSound(); // Play sound when placed
+// //             checkPyramidComplete(); // Check if the structure is done
+// //         }
+// //     }
+// // }
+
+
+// // function drop(e) {
+// //     e.preventDefault();
+// //     if (draggedBottle) {
+// //         const id = e.dataTransfer.getData("text/plain");
+// //         const bottle = document.getElementById(id);
+// //         const rect = e.target.getBoundingClientRect();
+// //         const x = e.clientX - rect.left - 25; // Center bottle
+// //         const y = e.clientY - rect.top - 50;
+// //         bottle.style.left = `${x}px`;
+// //         bottle.style.top = `${y}px`;
+// //         checkPyramidComplete();
+// //     }
+// // }
+
+// function playSnapSound() {
+//     let audio = new Audio('snap.mp3'); // Add a soft snap sound
+//     audio.play();
+// }
+
+// function checkPyramidComplete() {
+//     const bottles = document.querySelectorAll(".stack-bottle");
+//     let rowCounts = Array(5).fill(0); // Track bottles per row
+
+//     bottles.forEach(bottle => {
+//         let row = bottle.getAttribute("data-row");
+//         if (row !== null) {
+//             rowCounts[row]++;
+//         }
+//     });
+
+//     // Correct bottle counts for each row in pyramid
+//     const correctRowCounts = [5, 4, 3, 2, 1];
+
+//     let correct = rowCounts.every((count, index) => count === correctRowCounts[index]);
+
+//     if (correct) { 
+//         stars += 30;
+//         gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
+//         speakLyrics("Yay! You built a perfect pyramid!");
+//         celebrateEnd();
+//         showNextLevelButton();
+//     }
+// }
 
 
 // function checkPyramidComplete() {
