@@ -254,11 +254,12 @@ button:disabled {
     height: 500px;
     margin: 0 auto;
     border: 1px solid #ccc;
+    overflow: hidden; /* Prevent bottles from escaping */
 }
 
 .stack-bottle {
     width: 50px;
-    height: 100px;
+    height: 70px;
     background: url("/images/bottle-removebg-preview.png") no-repeat center/contain;
     position: absolute;
     transition: transform 0.3s, top 0.3s, left 0.3s;
