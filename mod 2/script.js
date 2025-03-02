@@ -5,6 +5,7 @@ let stars = 0;
 let completedLevels = [1]; // Track completed levels (start with Level 1 complete)
 let bottleBreakSound = document.getElementById("bottleBreak");
 let cheerSound = document.getElementById("cheer");
+let snapSound = document.getElementById("snap");
 
 // DOM elements
 let lyricsContainer = document.getElementById("lyrics");
@@ -418,8 +419,7 @@ function drop(e) {
 // }
 
 function playSnapSound() {
-    let audio = new Audio('snap.mp3'); // Add a soft snap sound
-    audio.play();
+  snapSound.play();
 }
 
 function checkPyramidComplete() {
