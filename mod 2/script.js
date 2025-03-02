@@ -192,14 +192,14 @@ function createDropZones() {
     const stackArea = document.getElementById("stackArea");
     const baseX = 120; // Starting x-position of the base row
     const baseY = 350; // Bottom-most row (y-position)
-    const bottleSpacing = 60; // Space between bottles
+    const bottleSpacing = 100; // Space between bottles
 
     const positions = [
         { y: baseY, count: 5 },  // Base row (5 bottles)
-        { y: baseY - 60, count: 4 },  // Row 2 (4 bottles)
-        { y: baseY - 120, count: 3 }, // Row 3 (3 bottles)
-        { y: baseY - 180, count: 2 }, // Row 4 (2 bottles)
-        { y: baseY - 240, count: 1 }  // Top row (1 bottle)
+        { y: baseY - 100, count: 4 },  // Row 2 (4 bottles)
+        { y: baseY - 200, count: 3 }, // Row 3 (3 bottles)
+        { y: baseY - 300, count: 2 }, // Row 4 (2 bottles)
+        { y: baseY - 400, count: 1 }  // Top row (1 bottle)
     ];
 
     positions.forEach((row, rowIndex) => {
