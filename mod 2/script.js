@@ -195,8 +195,8 @@ function createDropZones() {
     const bottleSpacing = 100; // Space between bottles
 
     const positions = [
-        { y: baseY, count: 5 },  // Base row (5 bottles)
-        { y: baseY - 100, count: 4 },  // Row 2 (4 bottles)
+        { y: baseY, count: 5 },      // Base row (5 bottles)
+        { y: baseY - 100, count: 4 }, // Row 2 (4 bottles)
         { y: baseY - 200, count: 3 }, // Row 3 (3 bottles)
         { y: baseY - 300, count: 2 }, // Row 4 (2 bottles)
         { y: baseY - 400, count: 1 }  // Top row (1 bottle)
@@ -211,17 +211,58 @@ function createDropZones() {
             hint.style.left = `${startX + i * bottleSpacing}px`;
             hint.style.top = `${row.y}px`;
             hint.setAttribute("data-row", rowIndex); // Mark row for checking
-            
+            stackArea.appendChild(hint);
+
             // Add center dot to drop zone
             let centerDot = document.createElement("div");
             centerDot.classList.add("center-dot");
             centerDot.classList.add("drop-zone-dot"); // Specific class for drop zone dots
             hint.appendChild(centerDot);
-            
-            stackArea.appendChild(hint);
+
+            // Add ghost bottles
+            let ghost = document.createElement("div");
+            ghost.classList.add("ghost-bottle");
+            ghost.style.left = `${startX + i * bottleSpacing}px`;
+            ghost.style.top = `${row.y}px`;
+            stackArea.appendChild(ghost);
         }
     });
 }
+
+// function createDropZones() {
+//     const stackArea = document.getElementById("stackArea");
+//     const baseX = 80; // Starting x-position of the base row
+//     const baseY = 420; // Bottom-most row (y-position)
+//     const bottleSpacing = 100; // Space between bottles
+
+//     const positions = [
+//         { y: baseY, count: 5 },  // Base row (5 bottles)
+//         { y: baseY - 100, count: 4 },  // Row 2 (4 bottles)
+//         { y: baseY - 200, count: 3 }, // Row 3 (3 bottles)
+//         { y: baseY - 300, count: 2 }, // Row 4 (2 bottles)
+//         { y: baseY - 400, count: 1 }  // Top row (1 bottle)
+//     ];
+
+//     positions.forEach((row, rowIndex) => {
+//         let startX = baseX + (rowIndex * (bottleSpacing / 2)); // Center each row
+
+//         for (let i = 0; i < row.count; i++) {
+//             let hint = document.createElement("div");
+//             hint.classList.add("drop-hint");
+//             hint.style.left = `${startX + i * bottleSpacing}px`;
+//             hint.style.top = `${row.y}px`;
+//             hint.setAttribute("data-row", rowIndex); // Mark row for checking
+            
+//             // Add center dot to drop zone
+//             let centerDot = document.createElement("div");
+//             centerDot.classList.add("center-dot");
+//             centerDot.classList.add("drop-zone-dot"); // Specific class for drop zone dots
+//             hint.appendChild(centerDot);
+            
+//             stackArea.appendChild(hint);
+//         }
+//     });
+// }
 
 function createStackBottles() {
     const stackArea = document.getElementById("stackArea");
@@ -270,54 +311,111 @@ function drop(e) {
         const id = e.dataTransfer.getData("text/plain");
         const bottle = document.getElementById(id);
         const dropZone = e.target.closest("#stackArea");
+        const hints = document.querySelectorAll(".drop-hint");
+        let closestHint = null;
+        let minDistance = Infinity;
 
-        if (bottle && dropZone) {
-            const hints = document.querySelectorAll(".drop-hint");
-            let closestHint = null;
-            let minDistance = Infinity;
-
-            // Check for nearest hint
-            hints.forEach(hint => {
-                let dx = parseInt(hint.style.left) - e.clientX;
-                let dy = parseInt(hint.style.top) - e.clientY;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestHint = hint;
-                }
-            });
-
-            // If close to a hint (within 50px), snap to it
-            if (closestHint && minDistance < 50) {
-                bottle.style.left = closestHint.style.left;
-                bottle.style.top = closestHint.style.top;
-                bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
-                bottle.classList.add("placed");
-
-                setTimeout(() => {
-                    bottle.classList.remove("placed");
-                }, 500);
-                
-                playSnapSound();
-            } else {
-                // Otherwise, position freely within drop zone
-                const rect = dropZone.getBoundingClientRect();
-                const x = e.clientX - rect.left - 25; // Center bottle
-                const y = e.clientY - rect.top - 50;
-
-                // Ensure bottle stays inside the drop zone
-                const maxX = rect.width - 50;
-                const maxY = rect.height - 100;
-                bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
-                bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+        // Find nearest hint
+        hints.forEach(hint => {
+            let dx = parseInt(hint.style.left) - e.clientX;
+            let dy = parseInt(hint.style.top) - e.clientY;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestHint = hint;
             }
+        });
 
-            bottle.classList.remove("dragging");
-            checkPyramidComplete();
-            draggedBottle = null; // Reset draggedBottle
+        if (closestHint && minDistance < 50) {
+            // Snap to the closest hint position
+            bottle.style.left = closestHint.style.left;
+            bottle.style.top = closestHint.style.top;
+            bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
+            bottle.classList.add("placed");
+
+            setTimeout(() => {
+                bottle.classList.remove("placed", "correct-placement");
+            }, 500);
+            
+            playSnapSound();
+        } else if (dropZone) {
+            // Position freely within drop zone if no hint is close
+            const rect = dropZone.getBoundingClientRect();
+            const x = e.clientX - rect.left - 25; // Center bottle
+            const y = e.clientY - rect.top - 50;
+
+            // Ensure bottle stays inside the drop zone
+            const maxX = rect.width - 50;
+            const maxY = rect.height - 100;
+            bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+            bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+        } else {
+            // If dropped outside drop zone and no hint, return to start position
+            bottle.style.left = `${10 + Math.random() * 50}px`;
+            bottle.style.top = `${10 + Math.random() * 50}px`;
         }
+
+        bottle.classList.remove("dragging");
+        checkPyramidComplete();
+        draggedBottle = null;
     }
 }
+
+// function drop(e) {
+//     e.preventDefault();
+    
+//     if (draggedBottle) {
+//         const id = e.dataTransfer.getData("text/plain");
+//         const bottle = document.getElementById(id);
+//         const dropZone = e.target.closest("#stackArea");
+
+//         if (bottle && dropZone) {
+//             const hints = document.querySelectorAll(".drop-hint");
+//             let closestHint = null;
+//             let minDistance = Infinity;
+
+//             // Check for nearest hint
+//             hints.forEach(hint => {
+//                 let dx = parseInt(hint.style.left) - e.clientX;
+//                 let dy = parseInt(hint.style.top) - e.clientY;
+//                 let distance = Math.sqrt(dx * dx + dy * dy);
+//                 if (distance < minDistance) {
+//                     minDistance = distance;
+//                     closestHint = hint;
+//                 }
+//             });
+
+//             // If close to a hint (within 50px), snap to it
+//             if (closestHint && minDistance < 50) {
+//                 bottle.style.left = closestHint.style.left;
+//                 bottle.style.top = closestHint.style.top;
+//                 bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
+//                 bottle.classList.add("placed");
+
+//                 setTimeout(() => {
+//                     bottle.classList.remove("placed");
+//                 }, 500);
+                
+//                 playSnapSound();
+//             } else {
+//                 // Otherwise, position freely within drop zone
+//                 const rect = dropZone.getBoundingClientRect();
+//                 const x = e.clientX - rect.left - 25; // Center bottle
+//                 const y = e.clientY - rect.top - 50;
+
+//                 // Ensure bottle stays inside the drop zone
+//                 const maxX = rect.width - 50;
+//                 const maxY = rect.height - 100;
+//                 bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+//                 bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+//             }
+
+//             bottle.classList.remove("dragging");
+//             checkPyramidComplete();
+//             draggedBottle = null; // Reset draggedBottle
+//         }
+//     }
+// }
 
 function playSnapSound() {
     let audio = new Audio('snap.mp3'); // Add a soft snap sound

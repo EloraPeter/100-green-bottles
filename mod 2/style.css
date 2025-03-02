@@ -287,6 +287,12 @@ button:disabled {
 }
 
 
+.correct-placement {
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+
 .dragging {
     opacity: 0.3;
 }
@@ -300,6 +306,15 @@ button:disabled {
     opacity: 0.5; /* Slightly visible */
     pointer-events: none; /* Prevent interaction */
 }
+.ghost-bottle {
+    width: 50px;
+    height: 70px;
+    background: url("/images/bottle-removebg-preview.png") no-repeat center/contain;
+    opacity: 0.3; /* Semi-transparent */
+    position: absolute;
+    pointer-events: none;
+}
+
 
 .placed {
     transition: 0.2s ease-in-out;
