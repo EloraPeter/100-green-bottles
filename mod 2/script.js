@@ -235,11 +235,12 @@ function createStackBottles() {
     stackArea.addEventListener("drop", drop);
 }
 
-let draggedBottle = null;
+let draggedBottle = null; // Global variable to track the dragged bottle
 
 function dragStart(e) {
     draggedBottle = e.target;
-    e.dataTransfer.setData("text/plain", e.target.id);
+    draggedBottle.classList.add("dragging");
+    e.dataTransfer.setData("text/plain", draggedBottle.id);
 }
 
 function dragOver(e) {
@@ -248,37 +249,102 @@ function dragOver(e) {
 
 function drop(e) {
     e.preventDefault();
+    
     if (draggedBottle) {
-        const hints = document.querySelectorAll(".drop-hint");
-        let closestHint = null;
-        let minDistance = Infinity;
+        const id = e.dataTransfer.getData("text/plain");
+        const bottle = document.getElementById(id);
+        const dropZone = e.target.closest("#stackArea");
 
-        hints.forEach(hint => {
-            let dx = parseInt(hint.style.left) - e.clientX;
-            let dy = parseInt(hint.style.top) - e.clientY;
-            let distance = Math.sqrt(dx * dx + dy * dy);
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestHint = hint;
+        if (bottle && dropZone) {
+            const hints = document.querySelectorAll(".drop-hint");
+            let closestHint = null;
+            let minDistance = Infinity;
+
+            // Check for nearest hint
+            hints.forEach(hint => {
+                let dx = parseInt(hint.style.left) - e.clientX;
+                let dy = parseInt(hint.style.top) - e.clientY;
+                let distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestHint = hint;
+                }
+            });
+
+            // If close to a hint (within 50px), snap to it
+            if (closestHint && minDistance < 50) {
+                bottle.style.left = closestHint.style.left;
+                bottle.style.top = closestHint.style.top;
+                bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
+                bottle.classList.add("placed");
+
+                setTimeout(() => {
+                    bottle.classList.remove("placed");
+                }, 500);
+                
+                playSnapSound();
+            } else {
+                // Otherwise, position freely within drop zone
+                const rect = dropZone.getBoundingClientRect();
+                const x = e.clientX - rect.left - 25; // Center bottle
+                const y = e.clientY - rect.top - 50;
+
+                // Ensure bottle stays inside the drop zone
+                const maxX = rect.width - 50;
+                const maxY = rect.height - 100;
+                bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+                bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
             }
-        });
 
-        // Snap bottle only if it's near a hint (within 50px)
-        if (closestHint && minDistance < 50) { 
-            draggedBottle.style.left = closestHint.style.left;
-            draggedBottle.style.top = closestHint.style.top;
-            draggedBottle.setAttribute("data-row", closestHint.getAttribute("data-row")); // Mark its row
-            draggedBottle.classList.add("placed");
-
-            setTimeout(() => {
-                draggedBottle.classList.remove("placed"); // Remove effect
-            }, 500);
-            
-            playSnapSound(); // Play sound when placed
-            checkPyramidComplete(); // Check if the structure is done
+            bottle.classList.remove("dragging");
+            checkPyramidComplete();
+            draggedBottle = null; // Reset draggedBottle
         }
     }
 }
+
+// function dragStart(e) {
+//     draggedBottle = e.target;
+//     e.dataTransfer.setData("text/plain", e.target.id);
+// }
+
+// function dragOver(e) {
+//     e.preventDefault();
+// }
+
+// function drop(e) {
+//     e.preventDefault();
+//     if (draggedBottle) {
+//         const hints = document.querySelectorAll(".drop-hint");
+//         let closestHint = null;
+//         let minDistance = Infinity;
+
+//         hints.forEach(hint => {
+//             let dx = parseInt(hint.style.left) - e.clientX;
+//             let dy = parseInt(hint.style.top) - e.clientY;
+//             let distance = Math.sqrt(dx * dx + dy * dy);
+//             if (distance < minDistance) {
+//                 minDistance = distance;
+//                 closestHint = hint;
+//             }
+//         });
+
+//         // Snap bottle only if it's near a hint (within 50px)
+//         if (closestHint && minDistance < 50) { 
+//             draggedBottle.style.left = closestHint.style.left;
+//             draggedBottle.style.top = closestHint.style.top;
+//             draggedBottle.setAttribute("data-row", closestHint.getAttribute("data-row")); // Mark its row
+//             draggedBottle.classList.add("placed");
+
+//             setTimeout(() => {
+//                 draggedBottle.classList.remove("placed"); // Remove effect
+//             }, 500);
+            
+//             playSnapSound(); // Play sound when placed
+//             checkPyramidComplete(); // Check if the structure is done
+//         }
+//     }
+// }
 
 
 // function drop(e) {
