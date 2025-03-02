@@ -285,13 +285,7 @@ button:disabled {
     background-color: blue; /* Blue dot for bottles */
 }
 
-.bottle-catch {
-    position: relative;
-    width: 100%;
-    height: 400px;
-    background: #f0f0f0;
-    border-radius: 15px;
-}
+
 .dragging {
     opacity: 0.5;
 }
@@ -312,7 +306,13 @@ button:disabled {
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.8); /* Glow effect */
 }
 
-
+.bottle-catch {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: #f0f0f0;
+    border-radius: 15px;
+}
 .catch-bottle {
     width: 50px;
     height: 100px;
