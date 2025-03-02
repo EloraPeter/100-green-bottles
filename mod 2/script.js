@@ -191,8 +191,8 @@ function startBottleStack() {
 
 function createDropZones() {
     const stackArea = document.getElementById("stackArea");
-    const baseX = 70; // Starting x-position of the base row
-    const baseY = 350; // Bottom-most row (y-position)
+    const baseX = 80; // Starting x-position of the base row
+    const baseY = 420; // Bottom-most row (y-position)
     const bottleSpacing = 100; // Space between bottles
 
     const positions = [
