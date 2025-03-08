@@ -285,6 +285,7 @@ function createDropZones() {
 function createStackBottles() {
     const stackArea = document.getElementById("stackArea");
     // Don't clear innerHTML here to preserve drop zones
+    console.log("Bottles created:", document.querySelectorAll(".stack-bottle").length);
     for (let i = 0; i < 15; i++) { // 15 bottles to drag (more than needed for pyramid)
         let bottle = document.createElement("div");
         bottle.classList.add("stack-bottle");
@@ -358,7 +359,7 @@ function drop(e) {
             bottle.style.left = `${Math.max(0, Math.min(x, rect.width - 50))}px`;
             bottle.style.top = `${Math.max(0, Math.min(y, rect.height - 100))}px`;
         }
-
+        console.log("Dropped at:", bottle.style.left, bottle.style.top, "Row:", bottle.getAttribute("data-row"));
         bottle.classList.remove("dragging");
         checkPyramidComplete();
         draggedBottle = null;
@@ -382,7 +383,7 @@ function checkPyramidComplete() {
 
     const correctRowCounts = [5, 4, 3, 2, 1];
     let correct = rowCounts.every((count, index) => count === correctRowCounts[index]);
-    console.log("Row counts:", rowCounts)
+    console.log("Row counts:", rowCounts);
     if (correct) {
         stars += 30;
         gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
