@@ -329,8 +329,8 @@ function drop(e) {
 
         if (closestHint && minDistance < 50) {
             // Snap to the closest hint position
-            bottle.style.left = closestHint.style.left;
-            bottle.style.top = closestHint.style.top;
+            // bottle.style.left = closestHint.style.left;
+            // bottle.style.top = closestHint.style.top;
             bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
             bottle.classList.add("placed");
 

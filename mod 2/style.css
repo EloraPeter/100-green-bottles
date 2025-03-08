@@ -1,3 +1,8 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: 'Comic Sans MS', cursive;
     text-align: center;
@@ -41,7 +46,7 @@ h1 {
 }
 
 .character {
-    margin: 10px 0;
+    margin: 10px 0 5px;
     max-width: 200px;
 }
 
@@ -73,7 +78,7 @@ button {
     padding: 18px 35px;
     font-size: 24px;
     cursor: pointer;
-    margin: 15px;
+    margin: 10px;
     border: none;
     background: #ff4d4d;
     color: white;
@@ -99,15 +104,15 @@ button:disabled {
 
 .lyrics-box {
     max-width: 900px;
-    margin: 20px auto;
-    padding: 20px;
-    font-size: 20px;
+    margin: 15px auto;
+    padding: 15px;
+    font-size: 18px;
     color: #333;
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     overflow-y: auto;
-    max-height: 100px;
+    max-height: 80px;
     animation: fadeIn 1s ease-in;
     scroll-behavior: smooth;
     scrollbar-width: none;
