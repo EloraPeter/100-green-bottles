@@ -285,7 +285,7 @@ function createDropZones() {
 function createStackBottles() {
     const stackArea = document.getElementById("stackArea");
     // Don't clear innerHTML here to preserve drop zones
-    console.log("Bottles created:", document.querySelectorAll(".stack-bottle").length);
+   
     for (let i = 0; i < 15; i++) { // 15 bottles to drag (more than needed for pyramid)
         let bottle = document.createElement("div");
         bottle.classList.add("stack-bottle");
@@ -307,6 +307,7 @@ function createStackBottles() {
         bottle.addEventListener("drop", drop);
         stackArea.appendChild(bottle);
     }
+    console.log("Bottles created:", document.querySelectorAll(".stack-bottle").length);
     stackArea.addEventListener("dragover", dragOver);
     stackArea.addEventListener("drop", drop);
 }
