@@ -800,7 +800,7 @@ function createPuzzle() {
         let piece = document.createElement("div");
         piece.classList.add("puzzle-piece");
         piece.id = pos.id;
-        piece.style.background = `url('/bottle-removebg-preview.png') no-repeat center/contain`;
+        piece.style.background = `url('/images/bottle-removebg-preview.png') no-repeat center/contain`;
         piece.style.left = `${Math.random() * 300}px`;
         piece.style.top = `${Math.random() * 200}px`;
         piece.draggable = true;
