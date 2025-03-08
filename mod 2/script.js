@@ -110,6 +110,7 @@ function startBottleKnock() {
     renderBottles();
     wiggleBottles();
     lyricsContainer.innerHTML = `<p>Let’s start the magic adventure! 100 green bottles standing on the wall.</p>`;
+    takeOneButton.addEventListener("click", takeOneDown); // Add this line
 }
 
 function renderBottles() {
@@ -316,7 +317,6 @@ function drop(e) {
         let closestHint = null;
         let minDistance = Infinity;
 
-        // Find nearest hint
         hints.forEach(hint => {
             let dx = parseInt(hint.style.left) - e.clientX;
             let dy = parseInt(hint.style.top) - e.clientY;
@@ -328,32 +328,19 @@ function drop(e) {
         });
 
         if (closestHint && minDistance < 50) {
-            // Snap to the closest hint position
-            // bottle.style.left = closestHint.style.left;
-            // bottle.style.top = closestHint.style.top;
+            // Snap exactly to hint position
+            bottle.style.left = closestHint.style.left;
+            bottle.style.top = closestHint.style.top;
             bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
             bottle.classList.add("placed");
-
-            setTimeout(() => {
-                bottle.classList.remove("placed", "correct-placement");
-            }, 500);
-            
             playSnapSound();
+            setTimeout(() => bottle.classList.remove("placed"), 500);
         } else if (dropZone) {
-            // Position freely within drop zone if no hint is close
             const rect = dropZone.getBoundingClientRect();
-            const x = e.clientX - rect.left - 25; // Center bottle
+            const x = e.clientX - rect.left - 25;
             const y = e.clientY - rect.top - 50;
-
-            // Ensure bottle stays inside the drop zone
-            const maxX = rect.width - 50;
-            const maxY = rect.height - 100;
-            bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
-            bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
-        } else {
-            // If dropped outside drop zone and no hint, return to start position
-            bottle.style.left = `${10 + Math.random() * 50}px`;
-            bottle.style.top = `${10 + Math.random() * 50}px`;
+            bottle.style.left = `${Math.max(0, Math.min(x, rect.width - 50))}px`;
+            bottle.style.top = `${Math.max(0, Math.min(y, rect.height - 100))}px`;
         }
 
         bottle.classList.remove("dragging");
@@ -361,6 +348,62 @@ function drop(e) {
         draggedBottle = null;
     }
 }
+// function drop(e) {
+//     e.preventDefault();
+    
+//     if (draggedBottle) {
+//         const id = e.dataTransfer.getData("text/plain");
+//         const bottle = document.getElementById(id);
+//         const dropZone = e.target.closest("#stackArea");
+//         const hints = document.querySelectorAll(".drop-hint");
+//         let closestHint = null;
+//         let minDistance = Infinity;
+
+//         // Find nearest hint
+//         hints.forEach(hint => {
+//             let dx = parseInt(hint.style.left) - e.clientX;
+//             let dy = parseInt(hint.style.top) - e.clientY;
+//             let distance = Math.sqrt(dx * dx + dy * dy);
+//             if (distance < minDistance) {
+//                 minDistance = distance;
+//                 closestHint = hint;
+//             }
+//         });
+
+//         if (closestHint && minDistance < 50) {
+//             // Snap to the closest hint position
+//             // bottle.style.left = closestHint.style.left;
+//             // bottle.style.top = closestHint.style.top;
+//             bottle.setAttribute("data-row", closestHint.getAttribute("data-row"));
+//             bottle.classList.add("placed");
+
+//             setTimeout(() => {
+//                 bottle.classList.remove("placed", "correct-placement");
+//             }, 500);
+            
+//             playSnapSound();
+//         } else if (dropZone) {
+//             // Position freely within drop zone if no hint is close
+//             const rect = dropZone.getBoundingClientRect();
+//             const x = e.clientX - rect.left - 25; // Center bottle
+//             const y = e.clientY - rect.top - 50;
+
+//             // Ensure bottle stays inside the drop zone
+//             const maxX = rect.width - 50;
+//             const maxY = rect.height - 100;
+//             bottle.style.left = `${Math.max(0, Math.min(x, maxX))}px`;
+//             bottle.style.top = `${Math.max(0, Math.min(y, maxY))}px`;
+//         } else {
+//             // If dropped outside drop zone and no hint, return to start position
+//             bottle.style.left = `${10 + Math.random() * 50}px`;
+//             bottle.style.top = `${10 + Math.random() * 50}px`;
+//         }
+
+//         bottle.classList.remove("dragging");
+//         checkPyramidComplete();
+//         draggedBottle = null;
+//     }
+// }
 
 // function drop(e) {
 //     e.preventDefault();
@@ -424,21 +467,19 @@ function playSnapSound() {
 
 function checkPyramidComplete() {
     const bottles = document.querySelectorAll(".stack-bottle");
-    let rowCounts = Array(5).fill(0); // Track bottles per row
+    let rowCounts = Array(5).fill(0);
 
     bottles.forEach(bottle => {
         let row = bottle.getAttribute("data-row");
         if (row !== null) {
-            rowCounts[parseInt(row)]++; // Ensure row is treated as an integer
+            rowCounts[parseInt(row)]++;
         }
     });
 
-    // Correct bottle counts for each row in pyramid
     const correctRowCounts = [5, 4, 3, 2, 1];
-
     let correct = rowCounts.every((count, index) => count === correctRowCounts[index]);
 
-    if (correct) { 
+    if (correct) {
         stars += 30;
         gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
         speakLyrics("Yay! You built a perfect pyramid!");
@@ -446,6 +487,31 @@ function checkPyramidComplete() {
         showNextLevelButton();
     }
 }
+
+// function checkPyramidComplete() {
+//     const bottles = document.querySelectorAll(".stack-bottle");
+//     let rowCounts = Array(5).fill(0); // Track bottles per row
+
+//     bottles.forEach(bottle => {
+//         let row = bottle.getAttribute("data-row");
+//         if (row !== null) {
+//             rowCounts[parseInt(row)]++; // Ensure row is treated as an integer
+//         }
+//     });
+
+//     // Correct bottle counts for each row in pyramid
+//     const correctRowCounts = [5, 4, 3, 2, 1];
+
+//     let correct = rowCounts.every((count, index) => count === correctRowCounts[index]);
+
+//     if (correct) { 
+//         stars += 30;
+//         gameArea.innerHTML += `<p>Yay! You built a perfect pyramid! 🎉</p>`;
+//         speakLyrics("Yay! You built a perfect pyramid!");
+//         celebrateEnd();
+//         showNextLevelButton();
+//     }
+// }
 
 
 // function startBottleStack() {
